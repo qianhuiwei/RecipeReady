@@ -40,6 +40,7 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
         // Get the recipe name from the current Recipe object and set this text on TextView.
         textView.setText(currentRecipe.getTitle());
 
+        // return the single item view to its parent ViewGroup
         return convertView;
     }
 }

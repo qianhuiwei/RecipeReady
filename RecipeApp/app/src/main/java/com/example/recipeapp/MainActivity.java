@@ -49,10 +49,11 @@ public class MainActivity extends AppCompatActivity {
                 // Find the current recipe item that was clicked on
                 Recipe currentRecipe = mAdapter.getItem(position);
 
+                // create intent that carries data to destination activity
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
 ////                intent.putExtra("image", currentRecipe.getImage());
-                intent.putExtra("title", currentRecipe.getTitle());
-                startActivity(intent);
+                intent.putExtra("title", currentRecipe.getTitle()); // add recipe title
+                startActivity(intent); // send the intent
             }
         });
 
@@ -60,19 +61,18 @@ public class MainActivity extends AppCompatActivity {
         gridView.setAdapter(mAdapter);
     }
 
-    @Override
+    @Override // this method inflate a menu item in the upper tool bar
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
         return true;
     }
 
-    @Override
+    @Override // this method defines each menu item behavior when clicked
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_search) {
             Intent intent = new Intent(MainActivity.this, SearchActivity.class);
             startActivity(intent);
-//            Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
