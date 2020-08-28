@@ -2,21 +2,21 @@ package com.example.recipeapp;
 
 public class Recipe {
     // member variable
-    private int image;
-    private String name;
+    private int mImage;
+    private String mTitle;
 
     // constructor
-    public Recipe(int image, String name) {
-        this.image = image;
-        this.name = name;
+    public Recipe(int image, String title) {
+        this.mImage = image;
+        this.mTitle = title;
     }
 
     // getter methods
     public int getImage() {
-        return image;
+        return mImage;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return mTitle;
     }
 }

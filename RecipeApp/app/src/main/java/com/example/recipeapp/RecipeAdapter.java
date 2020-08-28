@@ -36,9 +36,9 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
         imageView.setImageResource(currentRecipe.getImage());
 
         // Find the TextView in the list_item.xml layout with the ID recipe_name.
-        TextView textView = (TextView) convertView.findViewById(R.id.recipe_name);
+        TextView textView = (TextView) convertView.findViewById(R.id.recipe_title);
         // Get the recipe name from the current Recipe object and set this text on TextView.
-        textView.setText(currentRecipe.getName());
+        textView.setText(currentRecipe.getTitle());
 
         return convertView;
     }

@@ -23,7 +23,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/recipe_name"
+        android:id="@+id/recipe_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Tiramisu"
