@@ -9,13 +9,17 @@
 
     <ImageView
         android:id="@+id/iv_recipe_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        tools:src="@drawable/tiramisu" />
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        />
-
+        android:textSize="24sp"
+        android:paddingLeft="12dp"
+        tools:text="tiramisu" />
 </LinearLayout>

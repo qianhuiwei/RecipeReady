@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecipeAdapter mAdapter;
+    private RecipeAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
                 // create intent that carries data to destination activity
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-////                intent.putExtra("image", currentRecipe.getImage());
+                intent.putExtra("resourseInt", currentRecipe.getImage());
                 intent.putExtra("title", currentRecipe.getTitle()); // add recipe title
                 startActivity(intent); // send the intent
             }
         });
-
         // Set the adapter on the gridview
         gridView.setAdapter(mAdapter);
     }

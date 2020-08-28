@@ -4,9 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DetailActivity extends AppCompatActivity {
+
+    // ImageView for display recipe picture
+    private ImageView mRecipeImageView;
+    // resource id that stores the recipe picture
+    private int mImageResourceId;
 
     // TextView for display recipe title
     private TextView mTitleTextView;
@@ -21,14 +27,17 @@ public class DetailActivity extends AppCompatActivity {
 
         // access TextView object related to recipe title
         mTitleTextView = findViewById(R.id.tv_title);
+        mRecipeImageView = (ImageView) findViewById(R.id.iv_recipe_image);
 
         // receive intent from MainActivity
-        Intent intent = getIntent();
-        if (intent != null) {
-            if (intent.hasExtra("title") ) { // if the intent contains data we want, extract data from it
-                mTitle = intent.getStringExtra("title"); // get title string from the intent
-                mTitleTextView.setText(mTitle); // set title string on TextView to display
-            }
+        Bundle extras = getIntent().getExtras();
+        if (extras == null)
+        {
+            return;
         }
+        mImageResourceId = extras.getInt("resourseInt");
+        mRecipeImageView.setImageResource(mImageResourceId);
+        mTitle = extras.getString("title"); // get title string from the intent
+        mTitleTextView.setText(mTitle); // set title string on TextView to display
     }
 }
