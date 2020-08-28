@@ -7,12 +7,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    RecipeAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +40,24 @@ public class MainActivity extends AppCompatActivity {
         GridView gridView = (GridView)findViewById(R.id.grid_view);
 
         // initialize the RecipeAdapter that knows how to display a list of Recipe object
-        RecipeAdapter adapter = new RecipeAdapter(this, recipes);
+        mAdapter = new RecipeAdapter(this, recipes);
+
+        // Add intent on each item view to open a detail page
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Find the current recipe item that was clicked on
+                Recipe currentRecipe = mAdapter.getItem(position);
+
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+////                intent.putExtra("image", currentRecipe.getImage());
+                intent.putExtra("title", currentRecipe.getTitle());
+                startActivity(intent);
+            }
+        });
 
         // Set the adapter on the gridview
-        gridView.setAdapter(adapter);
+        gridView.setAdapter(mAdapter);
     }
 
     @Override
