@@ -27,6 +27,7 @@ public class DetailActivity extends AppCompatActivity {
 
         // access TextView object related to recipe title
         mTitleTextView = findViewById(R.id.tv_title);
+        // access Imageview object related to recipe picture
         mRecipeImageView = (ImageView) findViewById(R.id.iv_recipe_image);
 
         // receive intent from MainActivity
@@ -35,9 +36,9 @@ public class DetailActivity extends AppCompatActivity {
         {
             return;
         }
-        mImageResourceId = extras.getInt("resourseInt");
-        mRecipeImageView.setImageResource(mImageResourceId);
+        mImageResourceId = extras.getInt("resourseInt"); // get picture resource id
+        mRecipeImageView.setImageResource(mImageResourceId); // display picture on Imageview
         mTitle = extras.getString("title"); // get title string from the intent
-        mTitleTextView.setText(mTitle); // set title string on TextView to display
+        mTitleTextView.setText(mTitle); // display title string on TextView to display
     }
 }

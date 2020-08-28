@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // create intent that carries data to destination activity
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                intent.putExtra("resourseInt", currentRecipe.getImage());
+                intent.putExtra("resourseInt", currentRecipe.getImage()); // add image resource id
                 intent.putExtra("title", currentRecipe.getTitle()); // add recipe title
                 startActivity(intent); // send the intent
             }
