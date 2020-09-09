@@ -2,21 +2,21 @@ package com.example.recipeapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecipesAdapter.ListItemClickListener {
 
-    private RecipeAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter; // private RecipeAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,28 +36,26 @@ public class MainActivity extends AppCompatActivity {
         recipes.add(new Recipe(R.drawable.cheese_burger, "Cheese burger"));
         recipes.add(new Recipe(R.drawable.fruit_tart, "Fruit Tart"));
 
-        // Find the GridView that displays a list of recipes with ID "grid_view"
-        GridView gridView = (GridView)findViewById(R.id.grid_view);
+        // Find the Recycler that displays a list of recipes
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_main);
 
-        // initialize the RecipeAdapter that knows how to display a list of Recipe object
-        mAdapter = new RecipeAdapter(this, recipes);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
 
-        // Add intent on each item view to open a detail page
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Find the current recipe item that was clicked on
-                Recipe currentRecipe = mAdapter.getItem(position);
+        mRecyclerView.setHasFixedSize(true);
 
-                // create intent that carries data to destination activity
-                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                intent.putExtra("resourseInt", currentRecipe.getImage()); // add image resource id
-                intent.putExtra("title", currentRecipe.getTitle()); // add recipe title
-                startActivity(intent); // send the intent
-            }
-        });
-        // Set the adapter on the gridview
-        gridView.setAdapter(mAdapter);
+        // specify an adapter (see also next example)
+        mAdapter = new RecipesAdapter(recipes, this);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onListItemClicked(Recipe currentRecipe) {
+        //create intent that carries data to destination activity
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        intent.putExtra("resourseInt", currentRecipe.getImage()); // add image resource id
+        intent.putExtra("title", currentRecipe.getTitle()); // add recipe title
+        startActivity(intent); // send the intent
     }
 
     @Override // this method inflate a menu item in the upper tool bar

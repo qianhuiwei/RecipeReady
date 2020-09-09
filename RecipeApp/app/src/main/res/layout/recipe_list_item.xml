@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -12,23 +11,22 @@
         android:weightSum="2">
 
         <ImageView
-            android:id="@+id/recipe_image"
+            android:id="@+id/iv_recipe_image"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            tools:src="@drawable/tiramisu"
             android:layout_weight="1"
             android:scaleType="centerCrop"
-            />
+            tools:src="@drawable/tiramisu" />
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/recipe_title"
+        android:id="@+id/tv_recipe_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Tiramisu"
-        tools:textColor="@android:color/black"
-        android:textStyle="bold"
+        android:paddingLeft="8dp"
         android:textSize="24sp"
-        />
+        android:textStyle="bold"
+        tools:text="Tiramisu"
+        tools:textColor="@android:color/black" />
 </LinearLayout>
