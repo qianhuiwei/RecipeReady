@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecipesAdapter.ListItemClickListener {
 
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Li
         setContentView(R.layout.activity_main);
 
         // create a list of recipe
-        ArrayList<Recipe> recipes = new ArrayList<>();
+        List<Recipe> recipes = new ArrayList<>();
         recipes.add(new Recipe(R.drawable.tiramisu, "Tiramisu"));
         recipes.add(new Recipe(R.drawable.brownie, "Brownie"));
         recipes.add(new Recipe(R.drawable.cake_pop, "Cake Pop"));

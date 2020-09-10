@@ -16,6 +16,12 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
     private List<Recipe> mDataset;
     final private ListItemClickListener mOnClickListener;
 
+    //constructor (take in an Arraylist of Recipe objects)
+    public RecipesAdapter(List<Recipe> recipes, ListItemClickListener listener) {
+        mDataset = recipes;
+        mOnClickListener = listener;
+    }
+
     public interface ListItemClickListener {
         void onListItemClicked(Recipe recipe);
     }
@@ -34,18 +40,9 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
         @Override
         public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            int imageId = mDataset.get(adapterPosition).getImage();
-            String title = mDataset.get(adapterPosition).getTitle();
-            Recipe currentRecipe = new Recipe(imageId, title);
+            Recipe currentRecipe = mDataset.get(getAdapterPosition());
             mOnClickListener.onListItemClicked(currentRecipe);
         }
-    }
-
-    //constructor (take in an Arraylist of Recipe objects)
-    public RecipesAdapter(List<Recipe> recipes, ListItemClickListener listener) {
-        mDataset = recipes;
-        mOnClickListener = listener;
     }
 
     // create new views
