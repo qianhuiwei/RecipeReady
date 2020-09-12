@@ -24,11 +24,4 @@ public interface RecipeDao {
     @Insert
     void insertAllRecipes(RecipeEntry... recipeEntries);
 
-    /* these methods may not be used for now */
-    @Update (onConflict = OnConflictStrategy.REPLACE)
-    void updateRecipe(RecipeEntry recipeEntry);
-
-    @Delete
-    void deleteRecipe(RecipeEntry recipeEntry);
-
 }

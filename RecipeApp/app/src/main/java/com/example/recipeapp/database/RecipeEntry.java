@@ -8,11 +8,13 @@ import androidx.room.PrimaryKey;
 public class RecipeEntry{
     @PrimaryKey (autoGenerate = true)
     private int id;
-    private int image;
+    private int image; // the datatype might changed to be an Uri, filepath, or byte[]
     private String title;
+    private String ingredients;
+    private String instructions;
 
     /* Constructors */
-    @Ignore // used to read recipes from db
+    @Ignore
     public RecipeEntry(int image, String title) {
         this.image = image;
         this.title = title;
@@ -37,6 +39,14 @@ public class RecipeEntry{
         return title;
     }
 
+    public String getIngredients() {
+        return ingredients;
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
     /* setters */
     public void setId(int id) {
         this.id = id;
@@ -48,5 +58,13 @@ public class RecipeEntry{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 }

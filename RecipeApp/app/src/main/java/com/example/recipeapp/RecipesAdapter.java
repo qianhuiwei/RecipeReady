@@ -1,5 +1,6 @@
 package com.example.recipeapp;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,20 +11,29 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.recipeapp.database.RecipeEntry;
+
 import java.util.List;
 
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder> {
-    private List<Recipe> mDataset;
+    List<RecipeEntry> mRecipeEntries;
     final private ListItemClickListener mOnClickListener;
+    private Context mContext;
 
-    //constructor (take in an Arraylist of Recipe objects)
-    public RecipesAdapter(List<Recipe> recipes, ListItemClickListener listener) {
-        mDataset = recipes;
+    //constructor (take in an ArrayList of RecipeEntry objects)
+    public RecipesAdapter(Context context, List<RecipeEntry> recipeEntries, ListItemClickListener listener) {
+        mRecipeEntries = recipeEntries;
+        mContext = context;
         mOnClickListener = listener;
     }
 
+    public void setRecipes(List<RecipeEntry> recipeEntries) {
+        mRecipeEntries = recipeEntries;
+        notifyDataSetChanged();
+    }
+
     public interface ListItemClickListener {
-        void onListItemClicked(Recipe recipe);
+        void onListItemClicked(RecipeEntry recipe);
     }
 
     // Inner viewHolder class. Provide a reference to the views for each data item
@@ -40,8 +50,8 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
         @Override
         public void onClick(View v) {
-            Recipe currentRecipe = mDataset.get(getAdapterPosition());
-            mOnClickListener.onListItemClicked(currentRecipe);
+            RecipeEntry currentRecipeEntry = mRecipeEntries.get(getAdapterPosition());
+            mOnClickListener.onListItemClicked(currentRecipeEntry);
         }
     }
 
@@ -50,7 +60,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
     @Override
     public RecipesAdapter.RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(parent.getContext())
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(mContext)
                 .inflate(R.layout.recipe_list_item, parent, false);
 
         RecipeViewHolder viewHolder = new RecipeViewHolder(linearLayout);
@@ -59,12 +69,16 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
-        holder.listItemImage.setImageResource(mDataset.get(position).getImage());
-        holder.listItemTitle.setText(mDataset.get(position).getTitle());
+        RecipeEntry currentRecipeEntry = mRecipeEntries.get(position);
+        String title = currentRecipeEntry.getTitle();
+        int image = currentRecipeEntry.getImage();
+
+        holder.listItemImage.setImageResource(image);
+        holder.listItemTitle.setText(title);
     }
 
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return mRecipeEntries.size();
     }
 }

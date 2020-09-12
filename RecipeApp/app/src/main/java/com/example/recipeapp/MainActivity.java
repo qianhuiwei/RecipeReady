@@ -1,57 +1,58 @@
 package com.example.recipeapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.recipeapp.database.AppDatabase;
+import com.example.recipeapp.database.RecipeEntry;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecipesAdapter.ListItemClickListener {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter; // private RecipeAdapter mAdapter;
+    private RecyclerView.Adapter mAdapter;
+    private AppDatabase mDb;
+    private List<RecipeEntry> mQueryRecipes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // create a list of recipe
-        List<Recipe> recipes = new ArrayList<>();
-        recipes.add(new Recipe(R.drawable.tiramisu, "Tiramisu"));
-        recipes.add(new Recipe(R.drawable.brownie, "Brownie"));
-        recipes.add(new Recipe(R.drawable.cake_pop, "Cake Pop"));
-        recipes.add(new Recipe(R.drawable.cheese_burger, "Cheese burger"));
-        recipes.add(new Recipe(R.drawable.fruit_tart, "Fruit Tart"));
-        recipes.add(new Recipe(R.drawable.tiramisu, "Tiramisu"));
-        recipes.add(new Recipe(R.drawable.brownie, "Brownie"));
-        recipes.add(new Recipe(R.drawable.cake_pop, "Cake Pop"));
-        recipes.add(new Recipe(R.drawable.cheese_burger, "Cheese burger"));
-        recipes.add(new Recipe(R.drawable.fruit_tart, "Fruit Tart"));
+        // initialize our local database
+        mDb = AppDatabase.getInstance(getApplicationContext());
 
-        // Find the Recycler that displays a list of recipes
+        // Setup the RecyclerView to display a list of recipes
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_main);
-
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
-
         mRecyclerView.setHasFixedSize(true);
 
-        // specify an adapter (see also next example)
-        mAdapter = new RecipesAdapter(recipes, this);
+        // Get recipes from the server and bind them with RecyclerView and Adapter
+        mQueryRecipes = mDb.recipeDao().loadAllRecipes();
+        mAdapter = new RecipesAdapter(this, mQueryRecipes, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    /* this is just for testing inserting data to db,
+       we won't handle insertion in our app
+    *  We'll only need to query data (JSON strings) from our web server
+       and display the returned recipes on UI */
+    public void saveRecipeToDb() {
+        RecipeEntry recipeEntry = new RecipeEntry(R.drawable.cheese_burger, "Cheese Burger");
+        mDb.recipeDao().insertRecipe(recipeEntry);
+    }
+
     @Override
-    public void onListItemClicked(Recipe currentRecipe) {
+    public void onListItemClicked(RecipeEntry currentRecipe) {
         //create intent that carries data to destination activity
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         intent.putExtra("resourseInt", currentRecipe.getImage()); // add image resource id
@@ -72,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Li
             Intent intent = new Intent(MainActivity.this, SearchActivity.class);
             startActivity(intent);
             return true;
+        }
+        if (id == R.id.action_insert) {
+            saveRecipeToDb();
         }
         return super.onOptionsItemSelected(item);
     }

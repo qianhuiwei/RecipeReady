@@ -5,4 +5,8 @@
         android:id="@+id/action_search"
         android:title="search"
         app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_insert"
+        android:title="insert"
+        app:showAsAction="always"/>
 </menu>
