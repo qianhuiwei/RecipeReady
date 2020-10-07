@@ -1,0 +1,3 @@
+#Tomcat publish data
+#Wed Oct 07 11:42:20 MDT 2020
+org.eclipse.jst.j2ee.server\:capstone=/Users/qian-huiwei/apache-tomcat-9.0.37/wtpwebapps/capstone

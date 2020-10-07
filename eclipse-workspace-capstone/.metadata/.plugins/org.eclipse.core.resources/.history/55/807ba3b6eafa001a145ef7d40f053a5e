@@ -1,0 +1,22 @@
+package tests;
+
+import static org.junit.Assert.*;
+
+import java.util.List;
+
+import org.junit.Test;
+
+import entity.Item;
+import external.RecipeAPIClient;
+
+public class searchAPI {
+
+	@Test
+	public void test() {
+		RecipeAPIClient client = new RecipeAPIClient();
+		List<Item> itemList = client.search(1, 2);
+		
+		assertEquals(2, itemList.size());
+	}
+
+}

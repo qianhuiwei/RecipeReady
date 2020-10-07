@@ -1,0 +1,41 @@
+package external;
+
+import java.util.List;
+import org.json.JSONException;
+
+import db.MySQLConnection;
+import entity.Item;
+
+public class CollectRecipe {
+	static int id1 = 3062;
+	static int id2 = id1 + 1;
+	static int id3 = id2 + 1;
+	static int id4 = id3 + 1;
+	static int id5 = id4 + 1;
+	static int id6 = id5 + 1;
+	static int id7 = id6 + 1;
+	static int id8 = id7 + 1;
+	static int id9 = id7 + 1;
+	static int id10 = id9 + 1;
+	static int id11 = id10 + 1;
+	
+	
+	public static void main(String[] args) {
+		RecipeAPIClient client = new RecipeAPIClient();
+//			List<Item> itemList = client.search(id1, id2, id3, id4, id5, id6, id7, id8, id9, id10, id11);
+//			List<Item> itemList = client.searchFew(id1, id2, id3, id4, id5);
+			List<Item> itemList = client.searchSingle(id1);
+			System.out.print("return list number: " + itemList.size() + "\n");
+			MySQLConnection connection = new MySQLConnection();
+			try {
+				for (Item item : itemList) {
+					connection.saveItem(item);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			} finally {
+				System.out.print("successfully saved items");
+				connection.close();
+			}
+		}
+}

@@ -1,0 +1,26 @@
+package recommendation;
+
+import java.util.HashMap;
+import java.util.Set;
+
+import db.MySQLConnection;
+
+public class Model {
+	public static void main(String[] args) {
+		MySQLConnection connection = new MySQLConnection();
+		HashMap<String, Integer> map = connection.getAllIngredients();
+		connection.close();
+		
+		Set<String> ingredients = map.keySet();
+//		map.values();
+	
+		System.out.println(map.values());
+		
+		
+//		// Print map
+//		for (String i : capitalCities.keySet()) {
+//		  System.out.println(i);
+//		}
+		
+	}
+}

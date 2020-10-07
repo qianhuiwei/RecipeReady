@@ -1,0 +1,44 @@
+package recommendation;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import db.MySQLConnection;
+
+public class Model {
+	public static void main(String[] args) {
+		// get top N frequent ingredients
+		Set<String> freqWords = freqWords(10);
+		System.out.println(freqWords);
+		
+		// use svm to train model
+		
+	}
+
+	// helper method to get top N most frequent ingredients
+	private static Set<String> freqWords(int topN) {
+		// get ingredient frequency map from db
+		MySQLConnection connection = new MySQLConnection();
+		HashMap<String, Integer> map = connection.getIngredientFreq();
+		connection.close();
+
+		// sort the HashMap by frequency and get top N frequent key-value pair
+		Map<String, Integer> sortedMap = map.entrySet().stream()
+				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(topN)
+				.collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+		// get top N ingredient names
+		Set<String> freqWords = sortedMap.keySet();
+		return freqWords;
+	}
+}

@@ -1,0 +1,36 @@
+package recommendation;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import db.MySQLConnection;
+
+public class Model {
+	public static void main(String[] args) {
+		MySQLConnection connection = new MySQLConnection();
+		HashMap<String, Integer> map = connection.getIngredientFreq();
+		connection.close();
+		
+		Map<String, Integer> sortedMap = 
+			     map.entrySet().stream()
+			    .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+			    .limit(10)
+			    .collect(Collectors.toMap(Entry::getKey, Entry::getValue,
+			                              (e1, e2) -> e1, LinkedHashMap::new));
+		
+		Set<String> commonWords = sortedMap.keySet();
+		System.out.print(commonWords);
+
+	}
+
+}
