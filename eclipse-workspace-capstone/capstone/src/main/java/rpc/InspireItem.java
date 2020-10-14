@@ -1,7 +1,6 @@
 package rpc;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -15,7 +14,6 @@ import org.json.JSONObject;
 
 import db.MySQLConnection;
 import entity.Item;
-import external.RecipeAPIClient;
 
 /**
  * Servlet implementation class InspireItem

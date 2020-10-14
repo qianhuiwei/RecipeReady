@@ -7,7 +7,7 @@ import db.MySQLConnection;
 import entity.Item;
 
 public class CollectRecipe {
-	static int id1 = 6052;
+	static int id1 = 25048;
 	static int id2 = id1 + 1;
 	static int id3 = id2 + 1;
 	static int id4 = id3 + 1;
@@ -37,5 +37,7 @@ public class CollectRecipe {
 				System.out.print("successfully saved items");
 				connection.close();
 			}
+		
+			
 		}
 }

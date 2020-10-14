@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -310,7 +311,7 @@ public class MySQLConnection {
 			statement.setInt(1, itemId);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				String ingredient = rs.getString("ingredient");
+				String ingredient = rs.getString("ingredient").toLowerCase();
 				ingredients.add(ingredient);
 
 			}
@@ -332,7 +333,7 @@ public class MySQLConnection {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				String ingredient = rs.getString("ingredient");
+				String ingredient = rs.getString("ingredient").toLowerCase();
 				if (!freqMap.containsKey(ingredient)) {
 					freqMap.put(ingredient, 1);
 				} else {
@@ -344,6 +345,33 @@ public class MySQLConnection {
 		}
 		return freqMap;
 	}
+	
+	// For write recipe id & ingredients into csv file in Export class
+	public HashMap<Integer, List<String>> getItemIdIngred() {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new HashMap<Integer,List<String>>();
+		}
+		
+		HashMap<Integer, List<String>> id_ingred_map = new HashMap<Integer, List<String>>();
+		String sql = "SELECT item_id FROM ingredients GROUP BY item_id";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+			List<Integer> ids = new ArrayList<>();
+			while (rs.next()) {
+				int itemId = rs.getInt("item_id");
+				ids.add(itemId);
+			}
+			for (int id: ids) {
+				id_ingred_map.put(id, getIngredients(id));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return id_ingred_map;
+	}
+	
 
 	public void setFridge(String userId, String ingredient) {
 		if (conn == null) {
@@ -361,7 +389,124 @@ public class MySQLConnection {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public List<Item> getRecommendItems(List<Integer> itemIds) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new ArrayList<>();
+		}
+		List<Item> recommendItems = new ArrayList<>();
 
+		String sql = "SELECT * FROM items WHERE item_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			for (Integer itemId : itemIds) {
+				statement.setInt(1, itemId);
+				ResultSet rs = statement.executeQuery();
+				if (rs.next()) {
+//					List<String> instructions = MySQLDBUtil.textToStrings(rs.getString("instructions"));
+
+					recommendItems.add(Item.builder().itemId(rs.getInt("item_id")).imageUrl(rs.getString("image_url"))
+							.title(rs.getString("title")).amounts(null).units(null)
+							.ingredients(getIngredients(itemId)).instructions(null)
+							.sourceUrl(rs.getNString("source_url")).build());
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return recommendItems;
+	}
+	
+	public List<Integer> getTopNMatchIds(List<String> fridge, int topN) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new ArrayList<>();
+		}
+		
+		List<Integer> idList = new ArrayList<>();
+		String sql = "";
+		int fridgeSize = fridge.size();
+		int num = fridgeSize;
+		int threshold = fridgeSize;
+		StringBuilder param = new StringBuilder("'");
+		for (int i = 0 ; i < fridgeSize - 1 ; i++) {
+			param.append(fridge.get(i));
+			param.append("|");
+		}
+		param.append(fridge.get(fridgeSize-1));
+		param.append("'");
+		try {
+			if (fridgeSize < 5) {
+				threshold += 2;
+			} else if (fridgeSize < 3) {
+				threshold += 5;
+			}
+			while (num > 0) {
+				sql = "SELECT * "
+						+ "FROM ( SELECT item_id FROM ingredients GROUP BY item_id having count(*) <= "
+						+ Integer.toString(threshold) 
+						+ ") AS A "
+						+ "JOIN ( SELECT item_id FROM ingredients WHERE ingredient RLIKE "
+						+ param
+						+ " group by item_id having count(*) >= "
+						+ num
+						+ ") AS B "
+						+ "ON A.item_id=B.item_id";
+				
+				PreparedStatement statement = conn.prepareStatement(sql);
+				ResultSet rs = statement.executeQuery();
+				while (rs.next() && idList.size() < topN) {
+					Integer id = rs.getInt("item_id");
+					System.out.println("query result id: " +id);
+					if (!idList.contains(id)) {
+						idList.add(id);
+					}
+				}
+				num--;
+				System.out.println("num of match: " + num);
+			}
+			
+
+			// search r that use all specify ingredients
+//			if (fridgeSize == 1) {
+//				sql = "SELECT item_id FROM ingredients WHERE ingredient = ?";
+//				PreparedStatement statement = conn.prepareStatement(sql);
+//				statement.setString(1, fridge.get(0));
+//				ResultSet rs = statement.executeQuery();
+//				while (rs.next()) {
+//					Integer id = rs.getInt("item_id");
+//					idList.add(id);
+//				}
+//			} else if (fridgeSize > 1) {
+//				StringBuilder param = new StringBuilder("(");
+//				String num = Integer.toString(fridgeSize);
+//				for (int i = 1; i < fridgeSize; i++) {
+//					param.append("?,");
+//				}
+//				param.append("?)");
+//				
+//				sql = "SELECT item_id FROM ingredients WHERE ingredient in "
+//						+ param
+//						+ " group by item_id having count(distinct ingredient) = "
+//						+ num;
+//				System.out.println(sql);
+//				PreparedStatement statement = conn.prepareStatement(sql);
+//				for (int i = 0; i < fridgeSize; i++) {
+//					statement.setString(i+1, fridge.get(i));
+//				}
+//				
+//				ResultSet rs = statement.executeQuery();
+//				while (rs.next()) {
+//					Integer id = rs.getInt("item_id");
+//					idList.add(id);
+//				}
+//			} 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return idList;
 	}
 
 	public void unsetFridge(String userId, String ingredient) {
@@ -380,13 +525,13 @@ public class MySQLConnection {
 		}
 	}
 
-	public Set<String> getFridge(String userId) {
+	public List<String> getFridge(String userId) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return new HashSet<>();
+			return new ArrayList<>();
 		}
 
-		Set<String> fridgeStorage = new HashSet<>();
+		List<String> fridgeStorage = new ArrayList<>();
 
 		try {
 			String sql = "SELECT ingredient FROM fridge WHERE user_id = ?";
@@ -394,9 +539,10 @@ public class MySQLConnection {
 			statement.setString(1, userId);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				String ingredient = rs.getString("ingredient");
+				String ingredient = rs.getString("ingredient").toLowerCase();
 				fridgeStorage.add(ingredient);
 			}
+			fridgeStorage.sort(String::compareToIgnoreCase);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
