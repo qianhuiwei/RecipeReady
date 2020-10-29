@@ -52,6 +52,12 @@
   	<description></description>
   	<servlet-class>rpc.InspireItem</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>Label</servlet-name>
+  	<display-name>Label</display-name>
+  	<description></description>
+  	<servlet-class>rpc.Label</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>SearchItem</servlet-name>
   	<url-pattern>/search</url-pattern>
@@ -83,5 +89,9 @@
   <servlet-mapping>
   	<servlet-name>InspireItem</servlet-name>
   	<url-pattern>/inspire</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>Label</servlet-name>
+  	<url-pattern>/label</url-pattern>
   </servlet-mapping>
 </web-app>

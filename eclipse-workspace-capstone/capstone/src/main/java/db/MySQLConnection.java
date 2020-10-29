@@ -320,11 +320,11 @@ public class MySQLConnection {
 		}
 		return ingredients;
 	}
-	
+
 	public HashMap<String, Integer> getIngredientFreq() {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return new HashMap<String,Integer>();
+			return new HashMap<String, Integer>();
 		}
 		HashMap<String, Integer> freqMap = new HashMap<String, Integer>();
 
@@ -345,14 +345,14 @@ public class MySQLConnection {
 		}
 		return freqMap;
 	}
-	
+
 	// For write recipe id & ingredients into csv file in Export class
 	public HashMap<Integer, List<String>> getItemIdIngred() {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return new HashMap<Integer,List<String>>();
+			return new HashMap<Integer, List<String>>();
 		}
-		
+
 		HashMap<Integer, List<String>> id_ingred_map = new HashMap<Integer, List<String>>();
 		String sql = "SELECT item_id FROM ingredients GROUP BY item_id";
 		try {
@@ -363,7 +363,7 @@ public class MySQLConnection {
 				int itemId = rs.getInt("item_id");
 				ids.add(itemId);
 			}
-			for (int id: ids) {
+			for (int id : ids) {
 				id_ingred_map.put(id, getIngredients(id));
 			}
 		} catch (SQLException e) {
@@ -371,7 +371,6 @@ public class MySQLConnection {
 		}
 		return id_ingred_map;
 	}
-	
 
 	public void setFridge(String userId, String ingredient) {
 		if (conn == null) {
@@ -390,7 +389,7 @@ public class MySQLConnection {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public List<Item> getRecommendItems(List<Integer> itemIds) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -408,9 +407,8 @@ public class MySQLConnection {
 //					List<String> instructions = MySQLDBUtil.textToStrings(rs.getString("instructions"));
 
 					recommendItems.add(Item.builder().itemId(rs.getInt("item_id")).imageUrl(rs.getString("image_url"))
-							.title(rs.getString("title")).amounts(null).units(null)
-							.ingredients(getIngredients(itemId)).instructions(null)
-							.sourceUrl(rs.getNString("source_url")).build());
+							.title(rs.getString("title")).amounts(null).units(null).ingredients(getIngredients(itemId))
+							.instructions(null).sourceUrl(rs.getNString("source_url")).build());
 				}
 			}
 		} catch (SQLException e) {
@@ -418,48 +416,49 @@ public class MySQLConnection {
 		}
 		return recommendItems;
 	}
-	
+
 	public List<Integer> getTopNMatchIds(List<String> fridge, int topN) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return new ArrayList<>();
 		}
-		
+
 		List<Integer> idList = new ArrayList<>();
 		String sql = "";
 		int fridgeSize = fridge.size();
 		int num = fridgeSize;
 		int threshold = fridgeSize;
+
+		if (fridgeSize == 0) {
+			return new ArrayList<>();
+		}
 		StringBuilder param = new StringBuilder("'");
-		for (int i = 0 ; i < fridgeSize - 1 ; i++) {
+
+		for (int i = 0; i < fridgeSize - 1; i++) {
 			param.append(fridge.get(i));
 			param.append("|");
 		}
-		param.append(fridge.get(fridgeSize-1));
+
+		param.append(fridge.get(fridgeSize - 1));
 		param.append("'");
+		System.out.println("slq: " + param);
 		try {
 			if (fridgeSize < 5) {
-				threshold += 2;
-			} else if (fridgeSize < 3) {
 				threshold += 5;
+			} else if (fridgeSize < 3) {
+				threshold += 9;
 			}
 			while (num > 0) {
-				sql = "SELECT * "
-						+ "FROM ( SELECT item_id FROM ingredients GROUP BY item_id having count(*) <= "
-						+ Integer.toString(threshold) 
-						+ ") AS A "
-						+ "JOIN ( SELECT item_id FROM ingredients WHERE ingredient RLIKE "
-						+ param
-						+ " group by item_id having count(*) >= "
-						+ num
-						+ ") AS B "
-						+ "ON A.item_id=B.item_id";
-				
+				sql = "SELECT * " + "FROM ( SELECT item_id FROM ingredients GROUP BY item_id having count(*) <= "
+						+ Integer.toString(threshold) + ") AS A "
+						+ "JOIN ( SELECT item_id FROM ingredients WHERE ingredient RLIKE " + param
+						+ " group by item_id having count(*) >= " + num + ") AS B " + "ON A.item_id=B.item_id";
+
 				PreparedStatement statement = conn.prepareStatement(sql);
 				ResultSet rs = statement.executeQuery();
 				while (rs.next() && idList.size() < topN) {
 					Integer id = rs.getInt("item_id");
-					System.out.println("query result id: " +id);
+					System.out.println("query result id: " + id);
 					if (!idList.contains(id)) {
 						idList.add(id);
 					}
@@ -467,7 +466,6 @@ public class MySQLConnection {
 				num--;
 				System.out.println("num of match: " + num);
 			}
-			
 
 			// search r that use all specify ingredients
 //			if (fridgeSize == 1) {
@@ -542,19 +540,19 @@ public class MySQLConnection {
 				String ingredient = rs.getString("ingredient").toLowerCase();
 				fridgeStorage.add(ingredient);
 			}
-			fridgeStorage.sort(String::compareToIgnoreCase);
+//			fridgeStorage.sort(String::compareToIgnoreCase);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return fridgeStorage;
 	}
-	
+
 	public Set<Item> getRandomItems() {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return new HashSet<>();
 		}
-		
+
 		Set<Item> randomItems = new HashSet<>();
 		try {
 			// get total number of rows = max id
@@ -563,34 +561,29 @@ public class MySQLConnection {
 			ResultSet rs = statement.executeQuery();
 			rs.next();
 			int min = 1;
-			int max = rs.getInt(1);
+//			int max = rs.getInt(1);
+			int max = 800;
 			System.out.print("max id = " + max + "\n\n");
 			int itemId = new Random().nextInt(max - min + 1) + min; // get random id between 1 - max id
 //			int itemId = 1;
-			
+
 			// get 5 items based on the random id, each iteration id += 10
-			sql = "SELECT * FROM items WHERE item_id = ?" ;
+			sql = "SELECT * FROM items WHERE item_id = ?";
 			for (int i = 0; i < 5; i++) {
-				System.out.print("itemId = " +itemId + "\n");
+				System.out.print("itemId = " + itemId + "\n");
 				statement = conn.prepareStatement(sql);
 				statement.setInt(1, itemId);
 				rs = statement.executeQuery();
 				if (rs.next()) {
 //					List<String> instructions = MySQLDBUtil.textToStrings(rs.getString("instructions"));
 
-					randomItems.add(Item.builder()
-							.itemId(rs.getInt("item_id"))
-							.imageUrl(rs.getString("image_url"))
-							.title(rs.getString("title"))
-							.amounts(null)
-							.units(null)
-							.ingredients(getIngredients(itemId))
-							.instructions(null)
-							.sourceUrl(rs.getNString("source_url")).build());
+					randomItems.add(Item.builder().itemId(rs.getInt("item_id")).imageUrl(rs.getString("image_url"))
+							.title(rs.getString("title")).amounts(null).units(null).ingredients(getIngredients(itemId))
+							.instructions(null).sourceUrl(rs.getNString("source_url")).build());
 				}
 				itemId = (itemId + 10) % max;
 				if (itemId == 0) {
-					itemId ++;
+					itemId++;
 				}
 //				itemId++;
 			}

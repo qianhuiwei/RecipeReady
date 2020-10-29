@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="loadF"/>
+		<item key="selection" value="hide"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="loadF"/>
-			<item value="load"/>
-			<item value="changeFavoriteItem"/>
-			<item value="fav"/>
-			<item value="salmon"/>
-			<item value="error"/>
-			<item value="font-weight"/>
-			<item value="item-nav"/>
-			<item value="item"/>
-			<item value="grid"/>
-			<item value="display"/>
-			<item value="item-list"/>
-			<item value="addItem"/>
-			<item value="create"/>
-			<item value="main"/>
+			<item value="hide"/>
+			<item value="add"/>
+			<item value="fridge"/>
+			<item value="builder"/>
+			<item value="client"/>
+			<item value="title"/>
+			<item value="background"/>
+			<item value="header"/>
+			<item value="footer"/>
+			<item value="font"/>
+			<item value="hover"/>
+			<item value="login"/>
+			<item value="ins"/>
+			<item value="listFridge"/>
+			<item value="loadFridgeItem"/>
 		</list>
 		<list key="replacehistory">
 		</list>

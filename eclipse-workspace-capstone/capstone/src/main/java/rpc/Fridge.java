@@ -37,7 +37,7 @@ public class Fridge extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// only allow accessing history when a login session exists
+		// only allow accessing fridge when a login session exists
 		HttpSession session = request.getSession(false);
 		if (session == null) {
 			response.setStatus(403);
@@ -65,7 +65,7 @@ public class Fridge extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// only allow modifying history when a login session exists
+		// only allow modifying fridge when a login session exists
 		HttpSession session = request.getSession(false);
 		if (session == null) {
 			response.setStatus(403);
@@ -95,7 +95,7 @@ public class Fridge extends HttpServlet {
 	 */
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// only allow modifying history when a login session exists
+		// only allow modifying fridge when a login session exists
 		HttpSession session = request.getSession(false);
 		if (session == null) {
 			response.setStatus(403);

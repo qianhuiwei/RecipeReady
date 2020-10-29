@@ -5,8 +5,9 @@
    */
   var user_id = '1111';
   var user_fullname = 'John';
-  var lng = -122.08;
-  var lat = 37.38;
+	AWS.config.region = 'us-west-2'; // Set your region here
+	AWS.config.credentials = new AWS.Credentials('AKIAVYQKYPU6HMH5FOEC', 'GGSIPfRIUAEM3fFQS+43B6K0PVPqN1e8Vn2cqv14'); // Set your credentials here
+	const rekognition = new AWS.Rekognition();
 
   /**
    * Initialize major event handlers
@@ -67,7 +68,7 @@
 
     showElement(itemNav);
     showElement(itemList);
-    loadInspireItems();
+ 	loadInspireItems();
     showElement(avatar);
     showElement(welcomeMsg);
     showElement(logoutBtn, 'inline-block');
@@ -420,6 +421,7 @@ function loadFridge() {
       var fridge = JSON.parse(res);
       if (!fridge || fridge.length === 0) {
         showWarningMessage('No ingredients in fridge.');
+		listFridge(fridge);
       } else {
         listFridge(fridge);
       }
@@ -547,7 +549,7 @@ function listFridge(fridge) {
 	section.style.display = 'flex';
 	section.style.marginBottom = '16px';
 
-	
+	// add ingredient
     var addText = $create('p');
 	addText.innerHTML = 'Add Ingredient';
 	section.appendChild(addText);
@@ -576,13 +578,103 @@ function listFridge(fridge) {
     };
 	section.appendChild(input);
 	section.appendChild(addBtn);
-
+	
+	// upload picture
+	
+	var uploadText = $create('p');
+	uploadText.innerHTML = 'Upload a picture';
+	section.appendChild(uploadText);
+	
+	var inputImage = $create('input', {
+      type: 'file',
+	  id: 'real-file'
+    });
+	
+	var uploadBtn = $create('button');
+	uploadBtn.textContent='Upload';
+	uploadBtn.style.border = 'none';
+	uploadBtn.style.borderRadius = '4px';
+	uploadBtn.style.marginLeft = '10px';
+	uploadBtn.style.paddingLeft = '10px';
+	uploadBtn.style.paddingRight = '10px';
+	uploadBtn.style.background = '#ff8a65';
+	section.appendChild(uploadBtn);
+	
+	var filenameText = $create('p');
+	filenameText.innerHTML = "No file chosen";
+	section.appendChild(filenameText);
+	
+	uploadBtn.addEventListener("click", function() {
+		inputImage.click();
+	});
+	
+	var labelText = $create('p');
+	
+	var image = document.createElement("img");
+	
+	image.width = "100";
+	image.height = "100";
+	hideElement(image);
+	section.appendChild(image);
+	
+	inputImage.addEventListener("change", function() {
+		if (inputImage.value) {
+			// update image file name
+			filenameText.innerHTML = inputImage.value.match(/[\/\\]([\w\d\s\.\-\(\)]+)$/)[1];
+			
+			// process image
+			var file = inputImage.files[0];
+   			var reader  = new FileReader();
+    		reader.onload = function(e)  {
+        	/*image.innerHTML = ""; // clear previous image
+			image.style.width = "100";
+			image.style.height = 'auto';
+        	image.src = e.target.result;*/
+			detectObjects(e.target.result, labelText);
+     		};
+			reader.readAsArrayBuffer(file);
+     		/*reader.readAsDataURL(file);
+			showElement(image);*/
+		
+   
+		} else {
+			filenameText.innerHTML = "No file chosen";
+		}
+	});
+	
+	// display list of fridge item
 	itemList.appendChild(section);
 	
 	for (var i = 0; i < fridge.length; i++) {
       loadFridgeItem(itemList, fridge[i]);
     }
   }
+
+/**
+ * Detect Objects
+ * 
+ * Uses Rekognition to detect labels and objects
+ */
+function detectObjects(imgData, labelText) {
+	const params = {
+		Image: {
+			Bytes: imgData
+		},
+		/*MaxLabels: 5, // (optional) Max number of labels with highest confidence*/
+		MinConfidence: 0.55 // (optional) Confidence threshold from 0 to 1, default is 0.55 if left blank
+	};
+	rekognition.detectLabels(params, function(err, data) {
+		if (err) {
+			console.log(err, err.stack);
+			alert('There was an error detecting the labels in the image provided. Check the console for more details.');
+		} else {
+			const labels = data.Labels.map((obj) => obj.Name).join(', ');
+			alert(labels);
+		}
+	});
+}
+
+
 
 function loadFridgeItem(itemList, fridgeItem) {
 
@@ -691,15 +783,6 @@ function loadFridgeItem(itemList, fridgeItem) {
 
     li.appendChild(section);
 
-    /*// address
-    var address = $create('p', {
-      className: 'item-address'
-    });
-
-    // ',' => '<br/>',  '\"' => ''
-    address.innerHTML = item.address.replace(/,/g, '<br/>').replace(/\"/g, '');
-    li.appendChild(address);*/
-
     // favorite link
     var favLink = $create('p', {
       className: 'fav-link'
@@ -714,7 +797,7 @@ function loadFridgeItem(itemList, fridgeItem) {
       className: item.favorite ? 'fa fa-heart' : 'fa fa-heart-o'
     }));
 
-    li.appendChild(favLink);
+	li.appendChild(favLink);
     itemList.appendChild(li);
   }
 

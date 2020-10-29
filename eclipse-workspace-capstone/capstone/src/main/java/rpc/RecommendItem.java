@@ -24,7 +24,7 @@ import recommendation.Model;
 public class RecommendItem extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static List<String> userFridgeCache;
-	private static Set<Item> itemListCache;
+	private static List<Item> itemListCache;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -55,15 +55,30 @@ public class RecommendItem extends HttpServlet {
 				List<String> userFridge = connection.getFridge(userId);
 				System.out.println("userfridge" + userFridge);
 				
-				List<Integer> recommendedItemIds = connection.getTopNMatchIds(userFridge, 5);
-				System.out.print("recommend ids size: "+ recommendedItemIds.size());
-				List<Item> itemList = connection.getRecommendItems(recommendedItemIds);
-				JSONArray array = new JSONArray();
-				for (Item item : itemList) {
-					JSONObject obj = item.toJSONObject();
-					array.put(obj);
+				if (!userFridge.equals(userFridgeCache)) {
+					List<Integer> recommendedItemIds = connection.getTopNMatchIds(userFridge, 10);
+					System.out.print("recommend ids size: "+ recommendedItemIds.size());
+					List<Item> itemList = connection.getRecommendItems(recommendedItemIds);
+					connection.close();
+					itemListCache = itemList;
+					userFridgeCache = userFridge;
+					JSONArray array = new JSONArray();
+					for (Item item : itemList) {
+						JSONObject obj = item.toJSONObject();
+						array.put(obj);
+					}
+					RpcHelper.writeJsonArray(response, array);
+				} else {
+					JSONArray array = new JSONArray();
+					for (Item item : itemListCache) {
+						JSONObject obj = item.toJSONObject();
+						array.put(obj);
+					}
+
+					RpcHelper.writeJsonArray(response, array);
 				}
-				RpcHelper.writeJsonArray(response, array);
+				
+				
 				
 //				if (!userFridge.equals(userFridgeCache)) {
 //					// get recommend ids from model

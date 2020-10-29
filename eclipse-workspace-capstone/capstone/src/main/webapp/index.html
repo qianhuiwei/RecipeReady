@@ -15,9 +15,12 @@
 <body>
   <header class="top-header">
     <nav class="top-nav">
-      <a href="#">Home</a>
-      <a href="#">Contact</a>
-      <a href="#">About</a>
+     <a class="header-mark" href="#">RecipeReady</a>
+     <a href="#">About</a>    
+     <a href="#">Follow Us</a>    
+	<i id="instagram" class="fab fa fa-instagram"></i>
+	<i id="twitter" class="fab fa fa-twitter"></i>
+	<i id="facebook" class="fab fa fa-facebook"></i>  
     </nav> 
     <span id="welcome-msg"></span>
     <a id="logout-link" href="logout">Logout</a>
@@ -25,11 +28,11 @@
   </header>
   
   <div class="container">
-    <header>
-      <p>
+   <header>
+      <!-- <p>
         <span>Recipe</span>
         <br /> Recommendation
-      </p>
+      </p> -->
     </header>
 
     <section class="main-section">
@@ -58,16 +61,13 @@
       </div>
 
       <aside id="item-nav">
-        <div class="nav-icon">
+       <!--  <div class="nav-icon">
           <i class="fa fa-cutlery fa-2x"></i>
-        </div>
+        </div> -->
         <nav class="main-nav">
           <a href="#" id="inspire-btn" class="main-nav-btn active">
             <i class="fa fa-lightbulb-o"></i> Inspiration
           </a>
-          <!-- <a href="#" id="nearby-btn" class="main-nav-btn">
-            <i class="fa fa-search"></i> Search Title
-          </a> -->
           <a href="#" id="fridge-btn" class="main-nav-btn">
             <i class="fa fa-pencil-square-o"></i> My Fridge
           </a>
@@ -92,21 +92,13 @@
         </li>
       </ul> 
       
-     <!--  <div id="item-list">
-       <div class="item">
-        <img alt="item image" src="https://s3-media3.fl.yelpcdn.com/bphoto/EmBj4qlyQaGd9Q4oXEhEeQ/ms.jpg" />
-         <a class="item-name" href="#">Item</a>
-          <div class="fav-link">
-            <i class="fa fa-heart"></i>
-          </div>
-       </div>
-      </div>  -->
     </section>
   </div>
   
   <footer>
-    <p class="title">What We Do</p>
-    <p>"Help you find the best recipe right now."</p>
+<!--   <p class="title">About</p> -->
+   <p class="title">Contact Us</p>
+  <!--   <p>"Help you find the best recipe right now."</p> -->
     <ul>
       <li>
         <p><i class="fa fa-map-marker fa-2x"></i></p>
@@ -125,4 +117,6 @@
   
   <!--encryption library-->
   <script src="https://rawgit.com/emn178/js-md5/master/build/md5.min.js"></script>
+   <!-- aws rekognition-->
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.451.0.min.js"></script>
   <script src="scripts/main.js"></script>
