@@ -7,7 +7,7 @@ import db.MySQLConnection;
 import entity.Item;
 
 public class CollectRecipe {
-	static int id1 = 40000;
+	static int id1 = 90000;
 //	static int id2 = id1 + 1;
 //	static int id3 = id2 + 1;
 //	static int id4 = id3 + 1;
@@ -28,9 +28,11 @@ public class CollectRecipe {
 		
 			int listSize = 0;
 			id1--;
-			while (listSize != 144) {
+			while (listSize != 150) {
 				id1++;
 				List<Item> itemList = client.searchSingle(id1);
+				System.out.println("id " + id1);
+				System.out.println("query result " + itemList.size());
 				if (itemList.size() == 0) {
 					continue;
 				} else {

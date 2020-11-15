@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="external.RecipeAPIClient"/>
-    <fullyQualifiedTypeName name="rpc.RpcHelper"/>
-    <fullyQualifiedTypeName name="java.util.Random"/>
-    <fullyQualifiedTypeName name="java.util.HashMap"/>
-    <fullyQualifiedTypeName name="java.util.stream.Stream"/>
-    <fullyQualifiedTypeName name="java.util.Comparator"/>
-    <fullyQualifiedTypeName name="java.util.Arrays"/>
-    <fullyQualifiedTypeName name="java.util.Map.Entry"/>
     <fullyQualifiedTypeName name="java.util.stream.Collectors"/>
     <fullyQualifiedTypeName name="java.util.LinkedHashMap"/>
     <fullyQualifiedTypeName name="java.util.Collections"/>
@@ -32,7 +24,6 @@
     <fullyQualifiedTypeName name="org.jpmml.evaluator.HasProbability"/>
     <fullyQualifiedTypeName name="org.jpmml.evaluator.Report"/>
     <fullyQualifiedTypeName name="org.jpmml.evaluator.ReportUtil"/>
-    <fullyQualifiedTypeName name="db.MySQLConnection"/>
     <fullyQualifiedTypeName name="java.util.Set"/>
     <fullyQualifiedTypeName name="recommendation.Model"/>
     <fullyQualifiedTypeName name="java.lang.System"/>
@@ -50,7 +41,6 @@
     <fullyQualifiedTypeName name="java.awt.Image"/>
     <fullyQualifiedTypeName name="com.amazonaws.services.rekognition.model.Image"/>
     <fullyQualifiedTypeName name="com.amazonaws.services.rekognition.model.DetectLabelsResult"/>
-    <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="com.amazonaws.services.rekognition.model.Label"/>
     <fullyQualifiedTypeName name="com.amazonaws.services.rekognition.model.AmazonRekognitionException"/>
     <fullyQualifiedTypeName name="com.amazonaws.util.IOUtils"/>
@@ -60,4 +50,14 @@
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="external.ItemRecognition"/>
     <fullyQualifiedTypeName name="java.net.URL"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpServlet"/>
+    <fullyQualifiedTypeName name="entity.Item"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpServletRequest"/>
+    <fullyQualifiedTypeName name="javax.servlet.ServletException"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpServletResponse"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpSession"/>
+    <fullyQualifiedTypeName name="db.MySQLConnection"/>
+    <fullyQualifiedTypeName name="org.json.JSONArray"/>
+    <fullyQualifiedTypeName name="org.json.JSONObject"/>
 </qualifiedTypeNameHistroy>

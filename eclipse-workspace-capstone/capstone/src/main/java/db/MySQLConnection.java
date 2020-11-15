@@ -108,8 +108,6 @@ public class MySQLConnection {
 			return;
 		}
 
-//		// Maybe insert item to items table
-//		saveItem(item);
 		String sql = "INSERT IGNORE INTO history (user_id, item_id) VALUES (?, ?)";
 		try {
 			PreparedStatement statement = conn.prepareStatement(sql);
@@ -321,6 +319,7 @@ public class MySQLConnection {
 		return ingredients;
 	}
 
+	// For traning model
 	public HashMap<String, Integer> getIngredientFreq() {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -466,41 +465,6 @@ public class MySQLConnection {
 				num--;
 				System.out.println("num of match: " + num);
 			}
-
-			// search r that use all specify ingredients
-//			if (fridgeSize == 1) {
-//				sql = "SELECT item_id FROM ingredients WHERE ingredient = ?";
-//				PreparedStatement statement = conn.prepareStatement(sql);
-//				statement.setString(1, fridge.get(0));
-//				ResultSet rs = statement.executeQuery();
-//				while (rs.next()) {
-//					Integer id = rs.getInt("item_id");
-//					idList.add(id);
-//				}
-//			} else if (fridgeSize > 1) {
-//				StringBuilder param = new StringBuilder("(");
-//				String num = Integer.toString(fridgeSize);
-//				for (int i = 1; i < fridgeSize; i++) {
-//					param.append("?,");
-//				}
-//				param.append("?)");
-//				
-//				sql = "SELECT item_id FROM ingredients WHERE ingredient in "
-//						+ param
-//						+ " group by item_id having count(distinct ingredient) = "
-//						+ num;
-//				System.out.println(sql);
-//				PreparedStatement statement = conn.prepareStatement(sql);
-//				for (int i = 0; i < fridgeSize; i++) {
-//					statement.setString(i+1, fridge.get(i));
-//				}
-//				
-//				ResultSet rs = statement.executeQuery();
-//				while (rs.next()) {
-//					Integer id = rs.getInt("item_id");
-//					idList.add(id);
-//				}
-//			} 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -540,7 +504,6 @@ public class MySQLConnection {
 				String ingredient = rs.getString("ingredient").toLowerCase();
 				fridgeStorage.add(ingredient);
 			}
-//			fridgeStorage.sort(String::compareToIgnoreCase);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -555,42 +518,18 @@ public class MySQLConnection {
 
 		Set<Item> randomItems = new HashSet<>();
 		try {
-			// get total number of rows = max id
-			String sql = "SELECT count(*) FROM items";
+			String sql = "SELECT * FROM items ORDER BY RAND() LIMIT 10";
 			PreparedStatement statement = conn.prepareStatement(sql);
 			ResultSet rs = statement.executeQuery();
-			rs.next();
-			int min = 1;
-//			int max = rs.getInt(1);
-			int max = 800;
-			System.out.print("max id = " + max + "\n\n");
-			int itemId = new Random().nextInt(max - min + 1) + min; // get random id between 1 - max id
-//			int itemId = 1;
-
-			// get 5 items based on the random id, each iteration id += 10
-			sql = "SELECT * FROM items WHERE item_id = ?";
-			for (int i = 0; i < 5; i++) {
-				System.out.print("itemId = " + itemId + "\n");
-				statement = conn.prepareStatement(sql);
-				statement.setInt(1, itemId);
-				rs = statement.executeQuery();
-				if (rs.next()) {
-//					List<String> instructions = MySQLDBUtil.textToStrings(rs.getString("instructions"));
-
-					randomItems.add(Item.builder().itemId(rs.getInt("item_id")).imageUrl(rs.getString("image_url"))
-							.title(rs.getString("title")).amounts(null).units(null).ingredients(getIngredients(itemId))
-							.instructions(null).sourceUrl(rs.getNString("source_url")).build());
-				}
-				itemId = (itemId + 10) % max;
-				if (itemId == 0) {
-					itemId++;
-				}
-//				itemId++;
+			while (rs.next()) {
+				int itemId = rs.getInt("item_id");
+				randomItems.add(Item.builder().itemId(itemId).imageUrl(rs.getString("image_url")).title(rs.getString("title"))
+						.ingredients(getIngredients(itemId))
+						.sourceUrl(rs.getNString("source_url")).build());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return randomItems;
 	}
-
 }

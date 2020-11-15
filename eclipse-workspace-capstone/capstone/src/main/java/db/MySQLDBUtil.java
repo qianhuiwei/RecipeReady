@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MySQLDBUtil {
-	private static final String INSTANCE = "capstone.c7mh8y6bp4gb.us-east-2.rds.amazonaws.com";
+	private static final String INSTANCE = "capstone4.c7mh8y6bp4gb.us-east-2.rds.amazonaws.com";
 	private static final String PORT_NUM = "3306";
 	public static final String DB_NAME = "capstone";
 	private static final String USERNAME = "admin";
