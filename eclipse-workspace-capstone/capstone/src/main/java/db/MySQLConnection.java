@@ -447,7 +447,7 @@ public class MySQLConnection {
 			} else if (fridgeSize < 3) {
 				threshold += 9;
 			}
-			while (num > 0) {
+			while (num > 0 && idList.size() < topN) {
 				sql = "SELECT * " + "FROM ( SELECT item_id FROM ingredients GROUP BY item_id having count(*) <= "
 						+ Integer.toString(threshold) + ") AS A "
 						+ "JOIN ( SELECT item_id FROM ingredients WHERE ingredient RLIKE " + param
@@ -481,6 +481,21 @@ public class MySQLConnection {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, userId);
 			statement.setString(2, ingredient);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void clearFridge(String userId) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return;
+		}
+		String sql = "DELETE FROM fridge WHERE user_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, userId);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

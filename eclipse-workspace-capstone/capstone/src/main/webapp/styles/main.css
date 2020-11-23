@@ -12,6 +12,10 @@ body {
 /* 	font-size: 0.9em; */
 }
 
+button:hover {
+	transform: scale(1.05)
+}
+
 ul {
 	list-style: none;
 }
@@ -59,6 +63,11 @@ ul {
 /**
  * top navigation
  */
+ 
+#recipe-btn:hover, #fridge-btn:hover{
+	text-decoration: underline;
+}
+
 .top-nav {
 	flex: 1;
 }
@@ -87,15 +96,38 @@ ul {
 /**
  * main header
  */
+
 .container>header {
-	align-items: center;
-	background:
-		url('https://media.foxbusiness.com/BrightCove/854081161001/201911/1877/854081161001_6109413165001_6109411483001-vs.jpg')
-		no-repeat top;
-	background-size: 100%;
-	display: flex;
 	height: 250px;
+	align-items: center;
+	display: flex;
+	background-size: 100%;
+	
+	background-position: top;	
+	background-repeat: no-repeat;
+	animation: slide;
+	animation-duration:30s;
+	animation-direction:reverse; 
+	animation-iteration-count:infinite;
+	animation-timing-function:ease-in-out;
 }
+
+@keyframes slide{
+	0% {
+		background-image:url('food_1.jpg');
+	} 20% {
+		background-image:url('food_6.jpg');
+	} 40% {
+		background-image:url('food_5.jpg');
+	} 60% {
+		background-image:url('food_3.jpg');
+	} 80% {
+	    background-image:url('food_2.jpg');
+	} 100% {
+	    background-image:url('food_1.jpg'); 
+	} 
+}
+
 
 .container>header p {
 	border-left: 1px solid #FFFFFF;
@@ -445,7 +477,7 @@ ul {
 	font-size: 0.9em;
 }
 
-input[type="file"] {
+#input-file {
     display: none;
 } 
 
@@ -476,6 +508,20 @@ input[type="file"] {
 }
 
 #see-recommend-btn{
+	background-color: white;
+	border: solid 1px #8d6e63;
+	color: #4e342e;
+	border-radius: 4px;
+	cursor: pointer;
+	text-align: left;
+	padding: 8px 10px;
+	margin-left:5px;
+	font-weight: 400;
+	font-family: 'Open Sans', sans-serif;
+	font-size:0.9em;
+}
+
+#clear-fridge-btn{
 	background-color: white;
 	border: solid 1px #8d6e63;
 	color: #4e342e;

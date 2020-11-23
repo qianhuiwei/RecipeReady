@@ -7,7 +7,7 @@ import db.MySQLConnection;
 import entity.Item;
 
 public class CollectRecipe {
-	static int id1 = 90000;
+	static int id1 = 120000;
 //	static int id2 = id1 + 1;
 //	static int id3 = id2 + 1;
 //	static int id4 = id3 + 1;

@@ -106,8 +106,13 @@ public class Fridge extends HttpServlet {
 		try {
 			JSONObject obj = new JSONObject(IOUtils.toString(request.getReader()));
 			String userId = obj.getString("user_id");
-			String ingredient = obj.getString("ingredient");
-			connection.unsetFridge(userId, ingredient);
+			if (obj.has("ingredient")) {
+				String ingredient = obj.getString("ingredient");
+				connection.unsetFridge(userId, ingredient);
+			} else {
+				connection.clearFridge(userId);
+			}
+					
 
 			RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS")); // FOR TESTING
 		} catch (JSONException e) {

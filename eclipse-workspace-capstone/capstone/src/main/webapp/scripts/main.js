@@ -26,6 +26,7 @@
 		document.querySelector('#fridge-btn').addEventListener('click', showFridgeSection);
 		document.querySelector('#add-fridge-btn').addEventListener('click', addFridgeItem);
 		document.querySelector('#see-recommend-btn').addEventListener('click', seeRecommend);
+		document.querySelector('#clear-fridge-btn').addEventListener('click', clearFridge);
 		
 		validateSession();
 		// onSessionValid({"user_id":"1111","name":"John Smith","status":"OK"});
@@ -209,7 +210,7 @@
 	function login() {
 		var username = document.querySelector('#username').value;
 		var password = document.querySelector('#password').value;
-		password = md5(username + md5(password));
+		password = sha256(username + sha256(password));
 
 		// The request parameters
 		var url = './login';
@@ -265,7 +266,7 @@
 		}
 
 		// encrypt password
-		password = md5(username + md5(password));
+		password = sha256(username + sha256(password));	
 
 		// The request parameters
 		var url = './register';
@@ -593,7 +594,7 @@
 	   </div>
 	   </li>
 	   */
-	function addItem(itemList, item) {
+	function addItem(itemList, item, fridgeItemList) {
 		var item_id = item.item_id;
 
 		// create the <li> tag and specify the id and class attributes
@@ -631,8 +632,28 @@
 		var keyword = $create('p', {
 			className: 'item-keyword'
 		});
-
-		keyword.innerHTML = item.ingredients.join(', ');
+		
+		// mark missing ingredients with different color
+		// for each ingredient and then for each fridgelist
+		var output = "";
+		for (var i = 0; i < item.ingredients.length; i++) {
+			var isInclude = false;
+			for (var j = 0 ; j < fridgeItemList.length; j++) {
+				if (item.ingredients[i].includes(fridgeItemList[j]) || fridgeItemList[j].includes(item.ingredients[i])) {
+					output += item.ingredients[i];
+					output += ", ";
+					isInclude = true;
+					break;
+				}
+			}
+			if (isInclude == false) {
+				output += item.ingredients[i].fontcolor("#990000"); // mark missing ingredient with red color
+				output += ", ";
+			}
+		}
+		output = output.substring(0, output.length-2); // trucate the last ", " substr
+		keyword.innerHTML = output;
+		
 		section.appendChild(keyword);
 
 		li.appendChild(section);
@@ -775,8 +796,29 @@
 			function(res) {
 				var result = JSON.parse(res);
 				if (result.result === 'SUCCESS') {
-					/*var element = document.getElementById(fridgeItem);
-					hideElement(element);*/
+					var element = document.getElementById(fridgeItem);
+					hideElement(element);
+					loadFridge();
+				}
+			},
+			function() {
+				alert('Failed to delete ingredient');
+			});
+	}
+	
+	function clearFridge() {
+		var url = './fridge';
+		var req = JSON.stringify({
+			user_id: user_id
+		});
+		ajax('DELETE', url, req,
+			// successful callback
+			function(res) {
+				var result = JSON.parse(res);
+				if (result.result === 'SUCCESS') {
+					// clear the fridge section
+					var element = document.querySelector('.fridge-item-list');
+					element.innerHTML = "";
 					loadFridge();
 				}
 			},

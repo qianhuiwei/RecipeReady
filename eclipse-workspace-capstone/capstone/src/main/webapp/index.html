@@ -32,7 +32,9 @@
 	</header>
 
 	<div class="container">
-		<header></header>
+		<header>
+		<img id="header-img">
+		</header>
 		<section class="main-section">
 			<div id="login-form">
 				<label for="username">Username:</label> <input id="username"
@@ -92,7 +94,8 @@
 							<div id="fridge-item-container">
 							<span id="storage-label">My Fridge Storage:</span>
 							<button id="see-recommend-btn"> <i
-						class="fa fa-thumbs-up"></i> See Recommended Recipes</button>
+						class="fa fa-thumbs-up"></i> See Recommendation</button>
+						<button id="clear-fridge-btn">Clear All</button>
 							<p id="load-fridge-msg"></p>
 							<ul>
 								<li class="fridge-item-list">
@@ -107,8 +110,9 @@
 							<label>Identify ingredients from photo</label>
 							<label class="custom-file-upload">
     							<input id="input-file" type="file"/>
-   								 Custom Upload
+   								 Choose File
 							</label>
+							
 							<div id="result-container">
 							<ul>
 							<li class=loading-section>
@@ -165,7 +169,8 @@
 	</footer>
 
 	<!--encryption library-->
-	<script src="https://rawgit.com/emn178/js-md5/master/build/md5.min.js"></script>
+	<script src="https://rawgit.com/emn178/js-sha256/master/build/sha256.min.js"></script>
 	<!-- aws rekognition-->
 	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.451.0.min.js"></script>
+	<!-- js file source-->
 	<script src="scripts/main.js"></script>

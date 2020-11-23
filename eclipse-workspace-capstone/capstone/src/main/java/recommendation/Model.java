@@ -1,16 +1,16 @@
-//package recommendation;
-//
-//import java.io.File;
-//import java.io.IOException;
-//import java.util.ArrayList;
-//import java.util.Collections;
-//import java.util.HashMap;
-//import java.util.LinkedHashMap;
-//import java.util.List;
-//import java.util.Map;
-//import java.util.Set;
-//import java.util.stream.Collectors;
-//
+package recommendation;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 //import javax.xml.bind.JAXBException;
 //
 //import org.dmg.pmml.FieldName;
@@ -19,10 +19,10 @@
 //import org.jpmml.evaluator.InputField;
 //import org.jpmml.evaluator.LoadingModelEvaluatorBuilder;
 //import org.xml.sax.SAXException;
-//
-//import db.MySQLConnection;
-//
-//public class Model {
+
+import db.MySQLConnection;
+
+public class Model {
 //	static private Evaluator evaluator;
 //	static private MySQLConnection connection;
 //	static List<String> freqWords;
@@ -143,15 +143,15 @@
 //////		System.out.println("top n = :" + topN + "\n");
 ////		return topN;
 ////	}
-//
-//	// helper method to get top N most frequent ingredients
-//	public static List<String> getFreqWords(HashMap<String, Integer> map, int topN) {
-//		// sort the HashMap by frequency and get top N frequent key-value pair
-//		List<String> freqWords = map.entrySet().stream()
-//				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(topN)
-//				.map(Map.Entry::getKey)
-//				.collect(Collectors.toList());
-//		
-//		return freqWords;
-//	}
-//}
+
+	// helper method to get top N most frequent ingredients
+	public static List<String> getFreqWords(HashMap<String, Integer> map, int topN) {
+		// sort the HashMap by frequency and get top N frequent key-value pair
+		List<String> freqWords = map.entrySet().stream()
+				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(topN)
+				.map(Map.Entry::getKey)
+				.collect(Collectors.toList());
+		
+		return freqWords;
+	}
+}
