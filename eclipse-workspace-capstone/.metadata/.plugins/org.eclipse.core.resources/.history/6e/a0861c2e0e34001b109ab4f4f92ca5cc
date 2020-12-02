@@ -1,0 +1,28 @@
+package tests;
+
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
+import db.MySQLConnection;
+
+public class UsersTable {
+	@Test
+	public void test() {
+		MySQLConnection connection = new MySQLConnection();
+		connection.testMySQLConnection();
+		
+		String user1 = "user1";
+		String user1_password = "abcd";
+		String user1_first_name = "Micky";
+		String user1_last_name = "Mouse";
+		connection.addUser(user1, user1_password, user1_first_name, user1_last_name);
+		
+		boolean hasUser = connection.verifyLogin(user1, user1_password);
+		assertTrue(hasUser);
+		System.out.println("db addUser");
+		
+		connection.close();
+		
+	}
+}

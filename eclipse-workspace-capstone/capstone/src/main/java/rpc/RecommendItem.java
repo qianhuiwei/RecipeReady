@@ -38,74 +38,45 @@ public class RecommendItem extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// only allow accessing history when a login session exists
-				HttpSession session = request.getSession(false);
-				if (session == null) {
-					response.setStatus(403);
-					return;
-				}
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.setStatus(403);
+			return;
+		}
 
-				// read history table + item table
-				String userId = request.getParameter("user_id");
+		// read history table + item table
+		String userId = request.getParameter("user_id");
 
-				// get userFride
-				MySQLConnection connection = new MySQLConnection();
-				List<String> userFridge = connection.getFridge(userId);
-				System.out.println("userfridge" + userFridge);
-				
-				if (!userFridge.equals(userFridgeCache)) {
-					List<Integer> recommendedItemIds = connection.getTopNMatchIds(userFridge, 50);
-					System.out.print("recommend ids size: "+ recommendedItemIds.size());
-					List<Item> itemList = connection.getRecommendItems(recommendedItemIds);
-					connection.close();
-					itemListCache = itemList;
-					userFridgeCache = userFridge;
-					JSONArray array = new JSONArray();
-					for (Item item : itemList) {
-						JSONObject obj = item.toJSONObject();
-						array.put(obj);
-					}
-					RpcHelper.writeJsonArray(response, array);
-				} else {
-					JSONArray array = new JSONArray();
-					for (Item item : itemListCache) {
-						JSONObject obj = item.toJSONObject();
-						array.put(obj);
-					}
+		// get userFride
+		MySQLConnection connection = new MySQLConnection();
+		List<String> userFridge = connection.getFridge(userId);
+		System.out.println("userfridge" + userFridge);
 
-					RpcHelper.writeJsonArray(response, array);
-				}
-				
-				
-				
-//				if (!userFridge.equals(userFridgeCache)) {
-//					// get recommend ids from model
-////					Model.loadModel();
-////					Model.loadFreqWords();
-//					List<Integer> recommendedItemIds = Model.runModel(userFridge, 10);
-//					System.out.println("recommend list size: " + recommendedItemIds.size());
-//					
-//					// get item from db
-//					Set<Item> itemList = connection.getRecommendItems(recommendedItemIds);
-//					connection.close();
-//					itemListCache = itemList;
-//					userFridgeCache = userFridge;
-//					
-//					JSONArray array = new JSONArray();
-//					for (Item item : itemList) {
-//						JSONObject obj = item.toJSONObject();
-//						array.put(obj);
-//					}
-//
-//					RpcHelper.writeJsonArray(response, array);
-//				} else {
-//					JSONArray array = new JSONArray();
-//					for (Item item : itemListCache) {
-//						JSONObject obj = item.toJSONObject();
-//						array.put(obj);
-//					}
-//
-//					RpcHelper.writeJsonArray(response, array);
-//				}
+		if (!userFridge.equals(userFridgeCache)) {
+			List<Integer> recommendedItemIds = connection.getRecommendItemIds(userFridge, 15);
+			System.out.print("recommend ids size: " + recommendedItemIds.size());
+			List<Item> itemList = connection.getRecommendItems(recommendedItemIds);
+			connection.close();
+
+			itemListCache = itemList;
+			userFridgeCache = userFridge;
+			JSONArray array = new JSONArray();
+			for (Item item : itemList) {
+				JSONObject obj = item.toJSONObject();
+				array.put(obj);
+			}
+
+			RpcHelper.writeJsonArray(response, array);
+
+		} else { // if fridge doesn't get modified, use cache
+			JSONArray array = new JSONArray();
+			for (Item item : itemListCache) {
+				JSONObject obj = item.toJSONObject();
+				array.put(obj);
+			}
+
+			RpcHelper.writeJsonArray(response, array);
+		}
 	}
 
 	/**

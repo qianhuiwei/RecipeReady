@@ -5,65 +5,55 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MySQLDBUtil {
+
+	// -----------------------------------
+	// FOR AWS DB connection
+	// -----------------------------------
+
+	// AWS connection credential for capstone project database
 	private static final String INSTANCE = "capstone5.c7mh8y6bp4gb.us-east-2.rds.amazonaws.com";
 	private static final String PORT_NUM = "3306";
 	public static final String DB_NAME = "capstone";
 	private static final String USERNAME = "admin";
 	private static final String PASSWORD = "12345678";
 
-	public static final String URL = "jdbc:mysql://"
-			+ INSTANCE + ":" + PORT_NUM + "/" + DB_NAME
-			+ "?user=" + USERNAME + "&password=" + PASSWORD 
-			+ "&autoReconnect=true&serverTimezone=UTC";
-	
-	
-//	public static String concateDoubles(List<Double> list) {
-//		String output = "";
-//		if (list.size() == 0) {
-//			return output;
-//		}
-//		for (Double d: list) {
-//			output += Double.toString(d);
-//			output += "\n";
-//		}
-//		return output;
-//	}
-	
-	
+	public static final String URL = "jdbc:mysql://" + INSTANCE + ":" + PORT_NUM + "/" + DB_NAME + "?user=" + USERNAME
+			+ "&password=" + PASSWORD + "&autoReconnect=true&serverTimezone=UTC";
+
+	// AWS connection credential for capstone project testing database
+	private static final String INSTANCE_TEST = "capstone6.c7mh8y6bp4gb.us-east-2.rds.amazonaws.com";
+
+	public static final String URL_TEST = "jdbc:mysql://" + INSTANCE_TEST + ":" + PORT_NUM + "/" + DB_NAME + "?user="
+			+ USERNAME + "&password=" + PASSWORD + "&autoReconnect=true&serverTimezone=UTC";
+
+	// --------------------------------------------------------------------------
+	// Helper methods that are used to insert and retrieve recipe instructions to
+	// and from the database and the server
+	// --------------------------------------------------------------------------
+
+	// Concatenate a list of strings into a single text string using "\n" as
+	// separator
 	public static String concateStrings(List<String> list) {
 		String output = "";
 		if (list.size() == 0) {
 			return output;
 		}
-		for (String s: list) {
+		for (String s : list) {
 			output += s;
 			output += "\n";
 		}
 		return output;
 	}
-	
-//	public static List<Double> textToDoubles(String text) {
-//		if (text == null || text == "") {
-//			return new ArrayList<Double>();
-//		}
-//		
-//		List<Double> output = new ArrayList<>();
-//        String[] array = text.split("\n"); 
-//  
-//        for (String d : array)  {
-//            output.add(Double.parseDouble(d));
-//        }
-//        return output;
-//	}
-	
+
+	// Separate a single text string to a list of strings using "\n" as separator
 	public static List<String> textToStrings(String text) {
 		if (text == null || text == "") {
 			return new ArrayList<String>();
 		}
-		
-        String[] array = text.split("\n"); 
-  
-        return Arrays.asList(array);
+
+		String[] array = text.split("\n");
+
+		return Arrays.asList(array);
 	}
 
 }

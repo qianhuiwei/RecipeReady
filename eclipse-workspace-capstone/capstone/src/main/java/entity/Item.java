@@ -10,18 +10,19 @@ import lombok.Getter;
 
 @Getter
 @Builder
+// use lombok library to enable builder pattern for Item object
 public class Item {
-	private int itemId; //id
-	private String imageUrl; //image
-	private String title; //title
+	private int itemId; // id
+	private String imageUrl; // image
+	private String title; // title
 	private List<Double> amounts; // extendedIngredients->measures->us->amount
 	private List<String> units; // extendedIngredients->measures->us->unitShort
-	private List<String> ingredients; //extendedIngredients->name
+	private List<String> ingredients; // extendedIngredients->name
 	private List<String> instructions; // analyzedInstructions->steps->step
 	private String sourceUrl;
-	
+
 	public JSONObject toJSONObject() {
-		
+
 		JSONObject obj = new JSONObject();
 		obj.put("item_id", itemId);
 		obj.put("image_url", imageUrl);
@@ -31,7 +32,7 @@ public class Item {
 		obj.put("ingredients", new JSONArray(ingredients));
 		obj.put("instructions", new JSONArray(instructions));
 		obj.put("source_url", sourceUrl);
-		
+
 		return obj;
 	}
 }

@@ -1,0 +1,14 @@
+package tests;
+
+import org.junit.Test;
+
+import entity.Item;
+
+public class ItemsTable {
+	
+	@Test
+	public void test() {
+		
+	}
+
+}

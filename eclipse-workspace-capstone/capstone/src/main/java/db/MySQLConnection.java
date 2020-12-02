@@ -17,6 +17,9 @@ import entity.Item;
 public class MySQLConnection {
 	private Connection conn;
 
+	/*
+	 * Constructor
+	 */
 	public MySQLConnection() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -26,6 +29,21 @@ public class MySQLConnection {
 		}
 	}
 
+	/*
+	 * FOR TESTING Switch connection to mock database for testing
+	 */
+	public void testMySQLConnection() {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			conn = DriverManager.getConnection(MySQLDBUtil.URL_TEST);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * Close database connection
+	 */
 	public void close() {
 		if (conn != null) {
 			try {
@@ -36,6 +54,13 @@ public class MySQLConnection {
 		}
 	}
 
+	// -----------------------------------
+	// users table operation
+	// -----------------------------------
+
+	/*
+	 * User Registration Insert user info into database
+	 */
 	public boolean addUser(String userId, String password, String firstname, String lastname) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -59,6 +84,10 @@ public class MySQLConnection {
 		return false;
 	}
 
+	/*
+	 * User login verification Verify user by userId and password Return true if
+	 * user exists in database, false otherwise
+	 */
 	public boolean verifyLogin(String userId, String password) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -79,6 +108,9 @@ public class MySQLConnection {
 		return false;
 	}
 
+	/*
+	 * Get user's full name
+	 */
 	public String getFullname(String userId) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -101,24 +133,13 @@ public class MySQLConnection {
 		return name;
 	}
 
-	public void setFavoriteItems(String userId, Item item) {
-		// check if there is connection with db
-		if (conn == null) {
-			System.err.println("DB connection failed");
-			return;
-		}
+	// -----------------------------------
+	// items table operation
+	// -----------------------------------
 
-		String sql = "INSERT IGNORE INTO history (user_id, item_id) VALUES (?, ?)";
-		try {
-			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, userId); // sanitize userId to prevent SQL injection
-			statement.setInt(2, item.getItemId());
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
+	/*
+	 * insert a recipe item into database
+	 */
 	public void saveItem(Item item) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -157,99 +178,9 @@ public class MySQLConnection {
 		}
 	}
 
-	public Set<Item> getItems() {
-		if (conn == null) {
-			System.err.println("DB connection failed");
-			return new HashSet<>();
-		}
-		Set<Item> items = new HashSet<>();
-
-		String sql = "SELECT * FROM items";
-		try {
-			PreparedStatement statement = conn.prepareStatement(sql);
-			ResultSet rs = statement.executeQuery();
-
-			while (rs.next()) {
-				List<String> instructions = MySQLDBUtil.textToStrings(rs.getString("instructions"));
-				int itemId = rs.getInt("item_id");
-				items.add(Item.builder().itemId(itemId).imageUrl(rs.getString("image_url")).title(rs.getString("title"))
-						.amounts(getAmounts(itemId)).units(getUnits(itemId)).ingredients(getIngredients(itemId))
-						.instructions(instructions).sourceUrl(rs.getNString("source_url")).build());
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return items;
-	}
-
-	public void unsetFavoriteItems(String userId, int itemId) {
-		if (conn == null) {
-			System.err.println("DB connection failed");
-			return;
-		}
-		String sql = "DELETE FROM history WHERE user_id = ? AND item_id = ?";
-		try {
-			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, userId);
-			statement.setInt(2, itemId);
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Set<Integer> getFavoriteItemIds(String userId) {
-		if (conn == null) {
-			System.err.println("DB connection failed");
-			return new HashSet<>();
-		}
-
-		Set<Integer> favoriteItems = new HashSet<>();
-
-		try {
-			String sql = "SELECT item_id FROM history WHERE user_id = ?";
-			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, userId);
-			ResultSet rs = statement.executeQuery();
-			while (rs.next()) {
-				int itemId = rs.getInt("item_id");
-				favoriteItems.add(itemId);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return favoriteItems;
-	}
-
-	public Set<Item> getFavoriteItems(String userId) {
-		if (conn == null) {
-			System.err.println("DB connection failed");
-			return new HashSet<>();
-		}
-		Set<Item> favoriteItems = new HashSet<>();
-		Set<Integer> favoritesItemIds = getFavoriteItemIds(userId);
-
-		String sql = "SELECT * FROM items WHERE item_id = ?";
-		try {
-			PreparedStatement statement = conn.prepareStatement(sql);
-			for (Integer itemId : favoritesItemIds) {
-				statement.setInt(1, itemId);
-				ResultSet rs = statement.executeQuery();
-				if (rs.next()) {
-					List<String> instructions = MySQLDBUtil.textToStrings(rs.getString("instructions"));
-
-					favoriteItems.add(Item.builder().itemId(rs.getInt("item_id")).imageUrl(rs.getString("image_url"))
-							.title(rs.getString("title")).amounts(getAmounts(itemId)).units(getUnits(itemId))
-							.ingredients(getIngredients(itemId)).instructions(instructions)
-							.sourceUrl(rs.getNString("source_url")).build());
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return favoriteItems;
-	}
-
+	/*
+	 * Helper method to get a list of amounts from a recipe item
+	 */
 	public List<Double> getAmounts(int itemId) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -265,7 +196,6 @@ public class MySQLConnection {
 			while (rs.next()) {
 				Double amount = rs.getDouble("amount");
 				amounts.add(amount);
-
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -273,6 +203,9 @@ public class MySQLConnection {
 		return amounts;
 	}
 
+	/*
+	 * Helper method to get a list of units from a recipe item
+	 */
 	public List<String> getUnits(int itemId) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -296,6 +229,9 @@ public class MySQLConnection {
 		return units;
 	}
 
+	/*
+	 * Helper method to get a list of ingredients from a recipe item
+	 */
 	public List<String> getIngredients(int itemId) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -319,104 +255,37 @@ public class MySQLConnection {
 		return ingredients;
 	}
 
-	// For traning model
-	public HashMap<String, Integer> getIngredientFreq() {
+	/*
+	 * Randomly select recipe items from database
+	 */
+	public Set<Item> getRandomItems() {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return new HashMap<String, Integer>();
+			return new HashSet<>();
 		}
-		HashMap<String, Integer> freqMap = new HashMap<String, Integer>();
 
-		String sql = "SELECT ingredient FROM ingredients";
+		Set<Item> randomItems = new HashSet<>();
 		try {
+			String sql = "SELECT * FROM items ORDER BY RAND() LIMIT 10";
 			PreparedStatement statement = conn.prepareStatement(sql);
 			ResultSet rs = statement.executeQuery();
-			while (rs.next()) {
-				String ingredient = rs.getString("ingredient").toLowerCase();
-				if (!freqMap.containsKey(ingredient)) {
-					freqMap.put(ingredient, 1);
-				} else {
-					freqMap.put(ingredient, freqMap.get(ingredient) + 1);
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return freqMap;
-	}
-
-	// For write recipe id & ingredients into csv file in Export class
-	public HashMap<Integer, List<String>> getItemIdIngred() {
-		if (conn == null) {
-			System.err.println("DB connection failed");
-			return new HashMap<Integer, List<String>>();
-		}
-
-		HashMap<Integer, List<String>> id_ingred_map = new HashMap<Integer, List<String>>();
-		String sql = "SELECT item_id FROM ingredients GROUP BY item_id";
-		try {
-			PreparedStatement statement = conn.prepareStatement(sql);
-			ResultSet rs = statement.executeQuery();
-			List<Integer> ids = new ArrayList<>();
 			while (rs.next()) {
 				int itemId = rs.getInt("item_id");
-				ids.add(itemId);
-			}
-			for (int id : ids) {
-				id_ingred_map.put(id, getIngredients(id));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return id_ingred_map;
-	}
-
-	public void setFridge(String userId, String ingredient) {
-		if (conn == null) {
-			System.err.println("DB connection failed");
-			return;
-		}
-
-		String sql = "INSERT IGNORE INTO fridge VALUES (?, ?)";
-		try {
-			PreparedStatement statement = conn.prepareStatement(sql);
-
-			statement.setString(1, userId);
-			statement.setString(2, ingredient);
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public List<Item> getRecommendItems(List<Integer> itemIds) {
-		if (conn == null) {
-			System.err.println("DB connection failed");
-			return new ArrayList<>();
-		}
-		List<Item> recommendItems = new ArrayList<>();
-
-		String sql = "SELECT * FROM items WHERE item_id = ?";
-		try {
-			PreparedStatement statement = conn.prepareStatement(sql);
-			for (Integer itemId : itemIds) {
-				statement.setInt(1, itemId);
-				ResultSet rs = statement.executeQuery();
-				if (rs.next()) {
-//					List<String> instructions = MySQLDBUtil.textToStrings(rs.getString("instructions"));
-
-					recommendItems.add(Item.builder().itemId(rs.getInt("item_id")).imageUrl(rs.getString("image_url"))
-							.title(rs.getString("title")).amounts(null).units(null).ingredients(getIngredients(itemId))
-							.instructions(null).sourceUrl(rs.getNString("source_url")).build());
-				}
+				randomItems.add(
+						Item.builder().itemId(itemId).imageUrl(rs.getString("image_url")).title(rs.getString("title"))
+								.ingredients(getIngredients(itemId)).sourceUrl(rs.getNString("source_url")).build());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return recommendItems;
+		return randomItems;
 	}
 
-	public List<Integer> getTopNMatchIds(List<String> fridge, int topN) {
+	/*
+	 * Retreive recipes itemIds that match the provided fridge the most and sort the
+	 * result from best matched to least matched
+	 */
+	public List<Integer> getRecommendItemIds(List<String> fridge, int topN) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return new ArrayList<>();
@@ -468,9 +337,168 @@ public class MySQLConnection {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		System.out.print(idList);
 		return idList;
 	}
 
+	/*
+	 * Get the recommended items from a list of itemIds
+	 */
+	public List<Item> getRecommendItems(List<Integer> itemIds) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new ArrayList<>();
+		}
+		List<Item> recommendItems = new ArrayList<>();
+
+		String sql = "SELECT * FROM items WHERE item_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			for (Integer itemId : itemIds) {
+				statement.setInt(1, itemId);
+				ResultSet rs = statement.executeQuery();
+				if (rs.next()) {
+					recommendItems.add(Item.builder().itemId(rs.getInt("item_id")).imageUrl(rs.getString("image_url"))
+							.title(rs.getString("title")).amounts(null).units(null).ingredients(getIngredients(itemId))
+							.instructions(null).sourceUrl(rs.getNString("source_url")).build());
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return recommendItems;
+	}
+
+	// -----------------------------------
+	// (favorite) history table operation
+	// -----------------------------------
+
+	/*
+	 * Add an item into the user's favorite list by item itemId
+	 */
+	public void setFavoriteItems(String userId, Item item) {
+		// check if there is connection with db
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return;
+		}
+
+		String sql = "INSERT IGNORE INTO history (user_id, item_id) VALUES (?, ?)";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, userId); // sanitize userId to prevent SQL injection
+			statement.setInt(2, item.getItemId());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * Remove an item from the user's favorite list by item itemId
+	 */
+	public void unsetFavoriteItems(String userId, int itemId) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return;
+		}
+		String sql = "DELETE FROM history WHERE user_id = ? AND item_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, userId);
+			statement.setInt(2, itemId);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * Get the favorite itemIds by userId
+	 */
+	public List<Integer> getFavoriteItemIds(String userId) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new ArrayList<>();
+		}
+
+		List<Integer> favoriteItems = new ArrayList<>();
+
+		try {
+			String sql = "SELECT item_id FROM history WHERE user_id = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, userId);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				int itemId = rs.getInt("item_id");
+				favoriteItems.add(itemId);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return favoriteItems;
+	}
+
+	/*
+	 * Get the favorite items from a list of itemIds
+	 */
+	public List<Item> getFavoriteItems(String userId) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new ArrayList<>();
+		}
+		List<Item> favoriteItems = new ArrayList<>();
+		List<Integer> favoritesItemIds = getFavoriteItemIds(userId);
+
+		String sql = "SELECT * FROM items WHERE item_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			for (Integer itemId : favoritesItemIds) {
+				statement.setInt(1, itemId);
+				ResultSet rs = statement.executeQuery();
+				if (rs.next()) {
+					List<String> instructions = MySQLDBUtil.textToStrings(rs.getString("instructions"));
+
+					favoriteItems.add(Item.builder().itemId(rs.getInt("item_id")).imageUrl(rs.getString("image_url"))
+							.title(rs.getString("title")).amounts(getAmounts(itemId)).units(getUnits(itemId))
+							.ingredients(getIngredients(itemId)).instructions(instructions)
+							.sourceUrl(rs.getNString("source_url")).build());
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return favoriteItems;
+	}
+
+	// -----------------------------------
+	// fridge table operation
+	// -----------------------------------
+
+	/*
+	 * Add an ingredient into the user's fridge
+	 */
+	public void setFridge(String userId, String ingredient) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return;
+		}
+
+		String sql = "INSERT IGNORE INTO fridge VALUES (?, ?)";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+
+			statement.setString(1, userId);
+			statement.setString(2, ingredient);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * Remove an ingredient from the user's fridge
+	 */
 	public void unsetFridge(String userId, String ingredient) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -486,7 +514,10 @@ public class MySQLConnection {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/*
+	 * Remove all ingredients from the user's fridge
+	 */
 	public void clearFridge(String userId) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -502,6 +533,9 @@ public class MySQLConnection {
 		}
 	}
 
+	/*
+	 * Get all ingredients from the user's fridge
+	 */
 	public List<String> getFridge(String userId) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
@@ -525,26 +559,92 @@ public class MySQLConnection {
 		return fridgeStorage;
 	}
 
-	public Set<Item> getRandomItems() {
+	// -----------------------------------
+	// METHODS FOR TESTING
+	// -----------------------------------
+
+	/*
+	 * Get user info by userId
+	 */
+	public List<String> getUserInfo(String userId) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
-			return new HashSet<>();
+			return new ArrayList<>();
 		}
 
-		Set<Item> randomItems = new HashSet<>();
+		ArrayList<String> result = new ArrayList<>();
+		String sql = "SELECT * FROM users WHERE user_id = ?";
 		try {
-			String sql = "SELECT * FROM items ORDER BY RAND() LIMIT 10";
 			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, userId);
 			ResultSet rs = statement.executeQuery();
-			while (rs.next()) {
-				int itemId = rs.getInt("item_id");
-				randomItems.add(Item.builder().itemId(itemId).imageUrl(rs.getString("image_url")).title(rs.getString("title"))
-						.ingredients(getIngredients(itemId))
-						.sourceUrl(rs.getNString("source_url")).build());
+
+			if (rs.next()) {
+				result.add(rs.getString("user_id"));
+				result.add(rs.getString("password"));
+				result.add(rs.getString("first_name"));
+				result.add(rs.getString("last_name"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return randomItems;
+
+		return result;
+	}
+
+	/*
+	 * Retrieve an item from database by itemId
+	 */
+	public Item getItem(int itemId) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return Item.builder().build();
+		}
+
+		Item item = Item.builder().build();
+		String sql = "SELECT * FROM items WHERE item_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, itemId);
+			ResultSet rs = statement.executeQuery();
+
+			while (rs.next()) {
+				List<String> instructions = MySQLDBUtil.textToStrings(rs.getString("instructions"));
+				item = Item.builder().itemId(itemId).imageUrl(rs.getString("image_url")).title(rs.getString("title"))
+						.amounts(getAmounts(itemId)).units(getUnits(itemId)).ingredients(getIngredients(itemId))
+						.instructions(instructions).sourceUrl(rs.getNString("source_url")).build();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return item;
+	}
+
+	/*
+	 * Retrieve all items from database
+	 */
+	public List<Item> getItems() {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return new ArrayList<>();
+		}
+		List<Item> items = new ArrayList<>();
+
+		String sql = "SELECT * FROM items";
+		try {
+			PreparedStatement statement = conn.prepareStatement(sql);
+			ResultSet rs = statement.executeQuery();
+
+			while (rs.next()) {
+				List<String> instructions = MySQLDBUtil.textToStrings(rs.getString("instructions"));
+				int itemId = rs.getInt("item_id");
+				items.add(Item.builder().itemId(itemId).imageUrl(rs.getString("image_url")).title(rs.getString("title"))
+						.amounts(getAmounts(itemId)).units(getUnits(itemId)).ingredients(getIngredients(itemId))
+						.instructions(instructions).sourceUrl(rs.getNString("source_url")).build());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return items;
 	}
 }

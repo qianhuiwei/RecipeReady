@@ -1,0 +1,16 @@
+package tests;
+
+import org.junit.Test;
+
+import db.MySQLConnection;
+
+public class UsersTable {
+	@Test
+	public void test() {
+		MySQLConnection connection = new MySQLConnection();
+		connection.testMySQLConnection();
+		connection.addUser("user1", "abcd", "Micky", "Mouse");
+		
+		
+	}
+}

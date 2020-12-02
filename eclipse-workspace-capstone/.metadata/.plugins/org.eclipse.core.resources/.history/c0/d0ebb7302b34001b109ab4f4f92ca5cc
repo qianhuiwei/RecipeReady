@@ -1,0 +1,35 @@
+package tests;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
+import org.junit.Test;
+
+import db.MySQLConnection;
+import entity.Item;
+import external.RecipeAPIClient;
+
+public class TestHistoryTable {
+	@Test
+	public void test() {
+		MySQLConnection connection = new MySQLConnection();
+		connection.testMySQLConnection();
+		
+		RecipeAPIClient client = new RecipeAPIClient();
+		int itemId = 100000;
+		List<Item> itemList = client.searchSingle(itemId);
+		Item item = itemList.get(0);
+		String userId = "user1";
+		
+		connection.setFavoriteItems(userId, item);
+		
+		List<Integer> ids = (List<Integer>) connection.getFavoriteItemIds(userId);
+		assertEquals((Integer)ids.get(0), (Integer)itemId);
+		
+		connection.getFavoriteItems(userId);
+		
+		connection.close();
+	}
+
+}

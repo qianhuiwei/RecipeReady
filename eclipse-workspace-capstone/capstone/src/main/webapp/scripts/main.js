@@ -3,8 +3,6 @@
 	/**
 	 * Variables
 	 */
-	var user_id = '1111';
-	var user_fullname = 'John';
 	AWS.config.region = 'us-west-2';
 	AWS.config.credentials = new AWS.Credentials('AKIAVYQKYPU6HMH5FOEC', 'GGSIPfRIUAEM3fFQS+43B6K0PVPqN1e8Vn2cqv14');
 	const rekognition = new AWS.Rekognition();
@@ -27,9 +25,8 @@
 		document.querySelector('#add-fridge-btn').addEventListener('click', addFridgeItem);
 		document.querySelector('#see-recommend-btn').addEventListener('click', seeRecommend);
 		document.querySelector('#clear-fridge-btn').addEventListener('click', clearFridge);
-		
+
 		validateSession();
-		// onSessionValid({"user_id":"1111","name":"John Smith","status":"OK"});
 	}
 
 	/**
@@ -72,7 +69,6 @@
 		var fridgeSection = document.querySelector('#fridge-section');
 		var recipeNav = document.querySelector('#recipe-btn');
 		var fridgeNav = document.querySelector('#fridge-btn');
-		
 
 		welcomeMsg.innerHTML = 'Welcome, ' + user_fullname;
 
@@ -111,7 +107,7 @@
 		hideElement(fridgeSection);
 		hideElement(recipeNav);
 		hideElement(fridgeNav);
-		
+
 		clearLoginError();
 		showElement(loginForm);
 	}
@@ -244,6 +240,7 @@
 		document.querySelector('#login-error').innerHTML = '';
 	}
 
+
 	// -----------------------------------
 	// Register
 	// -----------------------------------
@@ -265,8 +262,8 @@
 			return
 		}
 
-		// encrypt password
-		password = sha256(username + sha256(password));	
+		// hash password using sha256
+		password = sha256(username + sha256(password));
 
 		// The request parameters
 		var url = './register';
@@ -303,7 +300,6 @@
 	function clearRegisterResult() {
 		document.querySelector('#register-result').innerHTML = '';
 	}
-
 
 	// -----------------------------------
 	// Helper Functions
@@ -356,7 +352,7 @@
 		fridgeMsg.innerHTML = '<p class="notice"><i class="fa fa-exclamation-triangle"></i> ' +
 			msg + '</p>';
 	}
-	
+
 	function showLoadingImgMessage(msg) {
 		var imgMsg = document.querySelector('#load-img-msg');
 		imgMsg.innerHTML = '<p class="notice"><i class="fa fa-spinner fa-spin"></i> ' +
@@ -419,6 +415,10 @@
 	// AJAX call server-side APIs
 	// -------------------------------------
 
+	/**
+	 * API #1 Load inspiration items API end point: [GET]
+	 * /inspire?user_id=1111
+	 */
 	function loadInspireItems() {
 		activeBtn('inspire-btn');
 
@@ -444,7 +444,35 @@
 	}
 
 	/**
-	 * API #2 Load favorite (or visited) items API end point: [GET]
+	 * API #2 Load recommended items API end point: [GET]
+	 * /recommend?user_id=1111
+	 */
+	function loadRecommendedItems() {
+		activeBtn('recommend-btn');
+
+		// request parameters
+		var url = './recommend';
+		var params = 'user_id=' + user_id;
+		var req = JSON.stringify({});
+
+		// display loading message
+		showLoadingMessage('Loading recommended items...');
+
+		// make AJAX call
+		ajax('GET', url + '?' + params, req, function(res) {
+			var items = JSON.parse(res);
+			if (!items || items.length === 0) {
+				showWarningMessage('No recommeded item.');
+			} else {
+				listItems(items);
+			}
+		}, function() {
+			showErrorMessage('Cannot load recommeded items.');
+		});
+	}
+	
+	/**
+	 * API #3 Load favorite items API end point: [GET]
 	 * /history?user_id=1111
 	 */
 	function loadFavoriteItems() {
@@ -470,35 +498,11 @@
 			showErrorMessage('Cannot load favorite items.');
 		});
 	}
-
+	
 	/**
-	 * API #3 Load recommended items API end point: [GET]
-	 * /recommendation?user_id=1111
+	 * API #4 Load fridge items API end point: [GET]
+	 * /history?user_id=1111
 	 */
-	function loadRecommendedItems() {
-		activeBtn('recommend-btn');
-
-		// request parameters
-		var url = './recommend';
-		var params = 'user_id=' + user_id;
-		var req = JSON.stringify({});
-
-		// display loading message
-		showLoadingMessage('Loading recommended items...');
-
-		// make AJAX call
-		ajax('GET', url + '?' + params, req, function(res) {
-			var items = JSON.parse(res);
-			if (!items || items.length === 0) {
-				showWarningMessage('No recommeded item.');
-			} else {
-				listItems(items);
-			}
-		}, function() {
-			showErrorMessage('Cannot load recommeded items.');
-		});
-	}
-
 	function loadFridge() {
 
 		// request parameters
@@ -524,7 +528,7 @@
 	}
 
 	/**
-	 * API #4 Toggle favorite (or visited) items
+	 * API #4 Toggle favorite items
 	 *
 	 * @param item - The item from the list
 	 *
@@ -557,13 +561,12 @@
 	}
 
 
-
 	// -------------------------------------
 	// Create item list
 	// -------------------------------------
 
 	/**
-	 * List recommendation items base on the data received
+	 * List items based on data received
 	 *
 	 * @param items - An array of item JSON objects
 	 */
@@ -581,18 +584,6 @@
 	   *
 	   * @param itemList - The <ul id="item-list"> tag (DOM container)
 	   * @param item - The item data (JSON object)
-	   *
-	   <li class="item">
-	   <img alt="item image" src="https://s3-media3.fl.yelpcdn.com/bphoto/EmBj4qlyQaGd9Q4oXEhEeQ/ms.jpg" />
-	   <div>
-	   <a class="item-name" href="#" target="_blank">Item</a>
-	   <p class="item-keyword">Vegetarian</p>
-	   </div>
-	   <p class="item-address">699 Calderon Ave<br/>Mountain View<br/> CA</p>
-	   <div class="fav-link">
-	   <i class="fa fa-heart"></i>
-	   </div>
-	   </li>
 	   */
 	function addItem(itemList, item, fridgeItemList) {
 		var item_id = item.item_id;
@@ -615,6 +606,7 @@
 				src: 'https://via.placeholder.com/100'
 			}));
 		}
+		
 		// section
 		var section = $create('div');
 
@@ -628,17 +620,17 @@
 		section.appendChild(title);
 		li.appendChild(section);
 
-		// keyword
+		// keyword (ingredients))
 		var keyword = $create('p', {
 			className: 'item-keyword'
 		});
-		
+
 		// mark missing ingredients with different color
 		// for each ingredient and then for each fridgelist
 		var output = "";
 		for (var i = 0; i < item.ingredients.length; i++) {
 			var isInclude = false;
-			for (var j = 0 ; j < fridgeItemList.length; j++) {
+			for (var j = 0; j < fridgeItemList.length; j++) {
 				if (item.ingredients[i].includes(fridgeItemList[j]) || fridgeItemList[j].includes(item.ingredients[i])) {
 					output += item.ingredients[i];
 					output += ", ";
@@ -651,9 +643,9 @@
 				output += ", ";
 			}
 		}
-		output = output.substring(0, output.length-2); // trucate the last ", " substr
+		output = output.substring(0, output.length - 2); // trucate the last ", " substr
 		keyword.innerHTML = output;
-		
+
 		section.appendChild(keyword);
 
 		li.appendChild(section);
@@ -676,11 +668,14 @@
 		itemList.appendChild(li);
 	}
 
+
 	// -------------------------------------
 	// Create fridge item list
 	// -------------------------------------
 
-
+	/**
+	 * List all fridge items
+	 */
 	function listFridge(fridge) {
 		var loadingMsg = document.querySelector('#load-fridge-msg');
 		loadingMsg.innerHTML = "";
@@ -705,7 +700,10 @@
 			}
 		}
 	}
-
+	
+	/**
+	 * Helper method to create layout element for each fridge item
+	 */
 	function loadFridgeItem(itemList, fridgeItem) {
 
 		var li = $create('li', {
@@ -745,6 +743,9 @@
 		itemList.appendChild(li);
 	}
 
+	/**
+	 * Add a single fridge item/ ingredient to the fridge
+	 */
 	function addFridgeItem() {
 		var fridgeItem = document.getElementById('add-fridge-item').value;
 		document.getElementById('add-fridge-item').value = "";
@@ -773,7 +774,7 @@
 				var result = JSON.parse(res);
 				// successfully add ingredient
 				if (result.result === 'SUCCESS') {
-					
+
 					loadFridge();
 					/*			loadFridgeItem(itemList, fridgeItem);*/
 				}
@@ -785,6 +786,9 @@
 			});
 	}
 
+	/**
+	 * Remove a single fridge item/ ingredient from the fridge
+	 */
 	function deleteFridgeItem(fridgeItem) {
 		var url = './fridge';
 		var req = JSON.stringify({
@@ -805,7 +809,10 @@
 				alert('Failed to delete ingredient');
 			});
 	}
-	
+
+	/**
+	 * Remove all fridge items/ ingredients from the fridge
+	 */
 	function clearFridge() {
 		var url = './fridge';
 		var req = JSON.stringify({
@@ -827,9 +834,15 @@
 			});
 	}
 
+
 	// -------------------------------------
 	// Get fridge item labels from uploaded photo (by calling AWS Rekognition API)
 	// -------------------------------------
+	
+	/**
+	 * Process the image once it''s uploaded
+	 * Use the image to call Rekognition API, get object labels from the image, and draw the image
+	 */
 	function uploadImgae() {
 		var inputImage = document.querySelector('#input-file');
 		inputImage.addEventListener("change", function() {
@@ -848,9 +861,8 @@
 	}
 
 	/**
-	 * Detect Objects
-	 * 
-	 * Uses Rekognition to detect labels and objects
+	 * Use Rekognition to detect objects and
+	 * return a list of possible labels
 	 */
 	function detectObjects(imgData) {
 		const params = {
@@ -871,6 +883,9 @@
 		});
 	}
 
+	/**
+	 * Display the uploaded image
+	 */
 	function drawImage() {
 		// hide loading message
 		var loadMsg = document.querySelector('#load-img-msg');
@@ -886,6 +901,9 @@
 		reader.readAsDataURL(inputImage.files[0]);
 	}
 
+	/**
+	 * List the returned labels
+	 */
 	function listLabels(labels) {
 		var itemList1 = document.querySelector('#label-item-list-1');
 		var itemList2 = document.querySelector('#label-item-list-2');
@@ -894,7 +912,7 @@
 		itemList2.innerHTML = '';
 		itemList3.innerHTML = '';
 		var itemList = [itemList1, itemList2, itemList3];
-		
+
 		var i = 0;
 		// display list of fridge item
 		while (i < labels.length) {
@@ -908,6 +926,9 @@
 		}
 	}
 
+	/**
+	 * Helper method to create layout element for each label item
+	 */
 	function loadLabelItem(itemList, labelItem) {
 		var li = $create('li');
 		li.style.display = 'flex';
@@ -923,7 +944,7 @@
 		var addBtn = $create('p', {
 			id: labelItem
 		});
-		
+
 		addBtn.style.paddingRight = "10px";
 
 		addBtn.onclick = function(e) {
@@ -943,6 +964,9 @@
 		itemList.appendChild(li);
 	}
 
+	/**
+	 * Add a single label item/ ingredient to the fridge
+	 */
 	function addLabelItem(labelId) {
 		// The request parameters
 		var url = './fridge';
@@ -968,7 +992,10 @@
 				alert('Failed to add ingredient');
 			});
 	}
-
+	
+	/**
+	 * Navigate to the recommended recipes section from the fridge section
+	 */
 	function seeRecommend() {
 		showRecipeSection();
 		loadRecommendedItems();

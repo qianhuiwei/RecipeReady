@@ -1,0 +1,35 @@
+package tests;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
+import db.MySQLConnection;
+import entity.Item;
+import external.RecipeAPIClient;
+
+public class ItemsTable {
+	
+	@Test
+	public void test() {
+		RecipeAPIClient client = new RecipeAPIClient();
+		List<Item> itemList = client.searchSingle(130000);
+		
+		MySQLConnection connection = new MySQLConnection();
+		connection.testMySQLConnection();
+		
+		Item itemInserted = itemList.get(0);
+		connection.saveItem(itemInserted);
+		
+		Item itemRetreived = connection.getItems().get(0);
+		
+		assertEquals(itemInserted.getItemId(), itemRetreived.getItemId());
+		
+		connection.close();
+		
+	}
+
+}

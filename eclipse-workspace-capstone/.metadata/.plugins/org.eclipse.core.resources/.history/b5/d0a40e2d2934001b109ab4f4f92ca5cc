@@ -1,0 +1,18 @@
+package tests;
+
+import org.junit.Test;
+
+import db.MySQLConnection;
+
+public class TestHistoryTable {
+	@Test
+	public void test() {
+		MySQLConnection connection = new MySQLConnection();
+		connection.testMySQLConnection();
+		
+		
+		
+		connection.close();
+	}
+
+}

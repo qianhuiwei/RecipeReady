@@ -1,0 +1,58 @@
+package tests;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
+import org.junit.Test;
+
+import db.MySQLTableCreation;
+import entity.Item;
+import external.RecipeAPIClient;
+
+public class TableCreation {
+	@Test
+	public void test() {
+		MySQLTableCreation table = new MySQLTableCreation();
+		table.main(args);
+
+
+		assertEquals(1, itemNum);
+		System.out.println("total item amount checked");
+		
+		assertEquals(1, item1_id);
+		System.out.println("item 1 ID checked");
+		
+		assertEquals("https://spoonacular.com/recipeImages/1-556x370.jpg", item1_imageUrl);
+		System.out.println("item 1 imageUrl checked");
+		
+		assertEquals("Fried Anchovies with Sage", item1_title);
+		System.out.println("item 1 title checked");
+		
+		assertEquals(8, item1_amounts.size());
+		System.out.println("item 1 amount total number checked");
+		
+		assertEquals(8, item1_units.size());
+		System.out.println("item 1 unit total number checked");
+		
+		assertEquals(8, item1_ingredients.size());
+		System.out.println("item 1 indredient total number checked");
+		
+		assertEquals(8, item1_instructions.size());
+		System.out.println("item 1 instruction total number checked");
+		
+		assertEquals("http://latavolamarcherecipebox.blogspot.com/2009/10/fried-anchovies-with-sage.html", item1_sourceUrl);
+		System.out.println("item 1 sourceUrl checked");
+		
+		assertEquals("anchovies", ing1);
+		assertEquals("baking powder", ing2);
+		assertEquals("egg", ing3);
+		assertEquals("flour", ing4);
+		assertEquals("sage leaves", ing5);
+		assertEquals("salt", ing6);
+		assertEquals("seltzer water", ing7);
+		assertEquals("vegetable oil", ing8);
+		System.out.println("item 1 all ingredient names checked");
+	}
+
+}

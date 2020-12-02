@@ -11,18 +11,31 @@ import org.json.JSONObject;
 
 import entity.Item;
 
+//---------------------------------
+// Utility class for RPC/ RESTful API
+//---------------------------------
+
 public class RpcHelper {
+	
+	/*
+	 * Method to write a JSONArray to RPC response
+	 */
 	public static void writeJsonArray(HttpServletResponse response, JSONArray array) throws IOException {
 		response.setContentType("application/json");
 		response.getWriter().print(array);
 	}
 	
+	/*
+	 * Method to write a JSONObject to RPC response
+	 */
 	public static void writeJsonObject(HttpServletResponse response, JSONObject obj) throws IOException {
 		response.setContentType("application/json");
 		response.getWriter().print(obj);
 	}
 	
-	// convert a JSONObject to Item Object
+	/*
+	 * Method to convert a JSONObject to Item Object
+	 */
 	public static Item parseFavoriteItem(JSONObject favoriteItem) {
 		List<Double> amounts = new ArrayList<>();
 		List<String> units = new ArrayList<>();

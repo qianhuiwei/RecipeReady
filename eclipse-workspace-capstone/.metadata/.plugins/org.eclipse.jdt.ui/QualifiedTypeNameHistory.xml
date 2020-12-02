@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="java.util.stream.Collectors"/>
-    <fullyQualifiedTypeName name="java.util.LinkedHashMap"/>
-    <fullyQualifiedTypeName name="java.util.Collections"/>
     <fullyQualifiedTypeName name="org.dmg.pmml.PMML"/>
     <fullyQualifiedTypeName name="org.jpmml.model.PMMLUtil"/>
     <fullyQualifiedTypeName name="org.jpmml.evaluator.ModelEvaluatorFactory"/>
@@ -47,12 +44,9 @@
     <fullyQualifiedTypeName name="com.amazonaws.regions.Regions"/>
     <fullyQualifiedTypeName name="com.amazonaws.auth.InstanceProfileCredentialsProvider"/>
     <fullyQualifiedTypeName name="com.amazonaws.auth.BasicAWSCredentials"/>
-    <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="external.ItemRecognition"/>
     <fullyQualifiedTypeName name="java.net.URL"/>
-    <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="javax.servlet.http.HttpServlet"/>
-    <fullyQualifiedTypeName name="entity.Item"/>
     <fullyQualifiedTypeName name="javax.servlet.http.HttpServletRequest"/>
     <fullyQualifiedTypeName name="javax.servlet.ServletException"/>
     <fullyQualifiedTypeName name="javax.servlet.http.HttpServletResponse"/>
@@ -60,4 +54,10 @@
     <fullyQualifiedTypeName name="db.MySQLConnection"/>
     <fullyQualifiedTypeName name="org.json.JSONArray"/>
     <fullyQualifiedTypeName name="org.json.JSONObject"/>
+    <fullyQualifiedTypeName name="external.RecipeAPIClient"/>
+    <fullyQualifiedTypeName name="entity.Item"/>
+    <fullyQualifiedTypeName name="db.MySQLTableCreation"/>
+    <fullyQualifiedTypeName name="org.junit.Test"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
 </qualifiedTypeNameHistroy>

@@ -1,0 +1,30 @@
+package tests;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
+import org.junit.Test;
+
+import db.MySQLConnection;
+
+public class TestFridgeTable {
+	
+	@Test
+	public void test() {
+		
+		MySQLConnection connection = new MySQLConnection();
+		connection.testMySQLConnection();
+		
+		String userId = "user1";
+		List<String> fridge = connection.getFridge(userId);
+		assertEquals(0, fridge.size());
+		
+		connection.setFridge(userId, "apple");
+	
+		assertEquals(1, fridge.size());
+		assertEquals("apple", fridge.get(0));
+		
+		connection.close();
+		}
+}

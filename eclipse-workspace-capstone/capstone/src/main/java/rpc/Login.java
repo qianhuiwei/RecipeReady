@@ -32,9 +32,11 @@ public class Login extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		// FOR TESTING
 		HttpSession session = request.getSession(false);
 		JSONObject obj = new JSONObject();
+
 		if (session != null) {
 			MySQLConnection connection = new MySQLConnection();
 			String userId = session.getAttribute("user_id").toString();
@@ -44,6 +46,7 @@ public class Login extends HttpServlet {
 			obj.put("status", "Invalid Session"); // after logout, no existing session
 			response.setStatus(403);
 		}
+
 		RpcHelper.writeJsonObject(response, obj);
 	}
 
@@ -53,12 +56,14 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		JSONObject input = new JSONObject(IOUtils.toString(request.getReader()));
 		String userId = input.getString("user_id");
 		String password = input.getString("password");
 
 		MySQLConnection connection = new MySQLConnection();
 		JSONObject obj = new JSONObject();
+
 		if (connection.verifyLogin(userId, password)) {
 			// create a session if no one exist
 			HttpSession session = request.getSession();
@@ -69,6 +74,7 @@ public class Login extends HttpServlet {
 			response.setStatus(401);
 		}
 		connection.close();
+
 		RpcHelper.writeJsonObject(response, obj);
 	}
 

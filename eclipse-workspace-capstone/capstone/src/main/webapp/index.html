@@ -18,7 +18,8 @@
 <body>
 	<header class="top-header">
 		<nav class="top-nav">
-			<a class="header-mark" href="#">RecipeReady</a> <a href="#">About</a>
+			<a class="header-mark" href="#">RecipeReady</a> 
+			<!-- <a href="#">About</a> -->
 			<a href="#" id="recipe-btn">Recipes</a> <a href="#" id="fridge-btn">My
 				Fridge</a>
 
@@ -33,7 +34,7 @@
 
 	<div class="container">
 		<header>
-		<img id="header-img">
+			<img id="header-img">
 		</header>
 		<section class="main-section">
 			<div id="login-form">
@@ -63,8 +64,6 @@
 					<a href="#" id="inspire-btn" class="main-nav-btn"> <i
 						class="fa fa-lightbulb-o"></i> Inspiration
 					</a>
-					<!-- <a href="#" id="fridge-btn" class="main-nav-btn"> 
-						<i class="fa fa-pencil-square-o"></i> My Fridge</a> -->
 					<a href="#" id="recommend-btn" class="main-nav-btn"> <i
 						class="fa fa-thumbs-up"></i> Recommendation
 					</a> <a href="#" id="fav-btn" class="main-nav-btn"> <i
@@ -88,51 +87,53 @@
 				<ul>
 					<li class="add-option">
 						<div id="add-option-1">
-							<label>Add ingredient</label> 
-							<input id="add-fridge-item" name="add" type="text">
+							<label>Add ingredient</label> <input id="add-fridge-item"
+								name="add" type="text">
 							<button id="add-fridge-btn">Add</button>
 							<div id="fridge-item-container">
-							<span id="storage-label">My Fridge Storage:</span>
-							<button id="see-recommend-btn"> <i
-						class="fa fa-thumbs-up"></i> See Recommendation</button>
-						<button id="clear-fridge-btn">Clear All</button>
-							<p id="load-fridge-msg"></p>
-							<ul>
-								<li class="fridge-item-list">
-									<div id="fridge-item-list-1"></div>
-									<div id="fridge-item-list-2"></div>
-									<div id="fridge-item-list-3"></div>
-								</li>
-							</ul>
+								<span id="storage-label">My Fridge Storage:</span>
+								<button id="see-recommend-btn">
+									<i class="fa fa-thumbs-up"></i> See Recommendation
+								</button>
+								<button id="clear-fridge-btn">Clear All</button>
+								<p id="load-fridge-msg"></p>
+								<ul>
+									<li class="fridge-item-list">
+										<div id="fridge-item-list-1"></div>
+										<div id="fridge-item-list-2"></div>
+										<div id="fridge-item-list-3"></div>
+									</li>
+								</ul>
 							</div>
 						</div>
 						<div id="add-option-2">
-							<label>Identify ingredients from photo</label>
-							<label class="custom-file-upload">
-    							<input id="input-file" type="file"/>
-   								 Choose File
+							<label>Identify ingredients from photo</label> <label
+								class="custom-file-upload"> <input id="input-file"
+								type="file" /> Choose File
 							</label>
-							
+
 							<div id="result-container">
-							<ul>
-							<li class=loading-section>
-								<div id="img-container">
-									<img src="https://cdn1.iconfinder.com/data/icons/linkedin-ui-glyph/48/Sed-16-256.png" id=img height="300" width="300">
-								</div>
-								<div id="load-img-msg"></div>
-								</li>
-							</ul>
-								
+								<ul>
+									<li class=loading-section>
+										<div id="img-container">
+											<img
+												src="https://cdn1.iconfinder.com/data/icons/linkedin-ui-glyph/48/Sed-16-256.png"
+												id=img height="300" width="300">
+										</div>
+										<div id="load-img-msg"></div>
+									</li>
+								</ul>
+
 								<!-- <button id="add-label-btn">Add All</button> -->
 								<p id="label-label">Suggested Ingredient Names:</p>
 								<div id="label-container">
-								<ul>
-								<li class="label-item-list">
-									<div id="label-item-list-1"></div>
-									<div id="label-item-list-2"></div>
-									<div id="label-item-list-3"></div>
-								</li>
-							</ul>
+									<ul>
+										<li class="label-item-list">
+											<div id="label-item-list-1"></div>
+											<div id="label-item-list-2"></div>
+											<div id="label-item-list-3"></div>
+										</li>
+									</ul>
 								</div>
 							</div>
 						</div>
@@ -143,9 +144,7 @@
 	</div>
 
 	<footer>
-		<!--   <p class="title">About</p> -->
 		<p class="title">Contact Us</p>
-		<!--   <p>"Help you find the best recipe right now."</p> -->
 		<ul>
 			<li>
 				<p>
@@ -169,7 +168,8 @@
 	</footer>
 
 	<!--encryption library-->
-	<script src="https://rawgit.com/emn178/js-sha256/master/build/sha256.min.js"></script>
+	<script
+		src="https://rawgit.com/emn178/js-sha256/master/build/sha256.min.js"></script>
 	<!-- aws rekognition-->
 	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.451.0.min.js"></script>
 	<!-- js file source-->

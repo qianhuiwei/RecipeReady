@@ -1,6 +1,7 @@
 package external;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,18 +18,23 @@ import org.json.JSONObject;
 
 import entity.Item;
 
+//---------------------------------------------------------------------
+// Utility class for:
+// 1. Set up connection with the external recipe API server
+// 2. Request recipe from API
+// 3. Clean the requested data, only store data we need for this project
+//---------------------------------------------------------------------
+
 public class RecipeAPIClient {
-	// URL to get recipe meta (ID, image, title)
-	// This URL returns JSONObject
-	private static final String URL_RECIPE_ID_TEMPLATE_MANY = "https://api.spoonacular.com/recipes/informationBulk"
-			+ "?ids=%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s" + "&apiKey=7f7e3fa22e264910a6bb6f915107598b";
-	
-	private static final String URL_RECIPE_ID_TEMPLATE_FEW = "https://api.spoonacular.com/recipes/informationBulk"
-			+ "?ids=%s,%s,%s,%s,%s" + "&apiKey=7f7e3fa22e264910a6bb6f915107598b";
-	
+
+	// URL to get recipe data (ID, imageUrl, title, sourceUrl...)
 	private static final String URL_RECIPE_ID_TEMPLATE_SINGLE = "https://api.spoonacular.com/recipes/informationBulk"
 			+ "?ids=%s" + "&apiKey=7f7e3fa22e264910a6bb6f915107598b";
-	
+
+	/*
+	 * Method to request a recipe by id, parse JSONArray returned from the API
+	 * server, and create a recipe Item stored data we need
+	 */
 	public List<Item> searchSingle(int id1) {
 		// swap out %s in the url template with input params
 		String url = String.format(URL_RECIPE_ID_TEMPLATE_SINGLE, id1);
@@ -62,75 +68,10 @@ public class RecipeAPIClient {
 
 		return new ArrayList<>();
 	}
-	
-	public List<Item> searchFew(int id1, int id2, int id3, int id4, int id5) {
-		// swap out %s in the url template with input params
-		String url = String.format(URL_RECIPE_ID_TEMPLATE_FEW, id1, id2, id3, id4, id5);
 
-		CloseableHttpClient httpclient = HttpClients.createDefault();
-
-		// Create a custom response class
-		ResponseHandler<List<Item>> responseHandler = new ResponseHandler<List<Item>>() {
-			@Override
-			public List<Item> handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
-				int status = response.getStatusLine().getStatusCode();
-				if (status != 200) {
-					return new ArrayList<>();
-				}
-				HttpEntity entity = response.getEntity();
-				if (entity == null) {
-					return new ArrayList<>();
-				}
-				String responseBody = EntityUtils.toString(entity);
-				JSONArray array = new JSONArray(responseBody);
-
-				return getItemList(array);
-			}
-		};
-
-		try {
-			return httpclient.execute(new HttpGet(url), responseHandler);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return new ArrayList<>();
-	}
-
-	public List<Item> search(int id1, int id2, int id3, int id4, int id5, int id6, int id7, int id8, int id9, int id10, int id11) {
-		// swap out %s in the url template with input params
-		String url = String.format(URL_RECIPE_ID_TEMPLATE_MANY, id1, id2, id3, id4, id5, id6, id7, id8, id9, id10, id11);
-
-		CloseableHttpClient httpclient = HttpClients.createDefault();
-
-		// Create a custom response class
-		ResponseHandler<List<Item>> responseHandler = new ResponseHandler<List<Item>>() {
-			@Override
-			public List<Item> handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
-				int status = response.getStatusLine().getStatusCode();
-				if (status != 200) {
-					return new ArrayList<>();
-				}
-				HttpEntity entity = response.getEntity();
-				if (entity == null) {
-					return new ArrayList<>();
-				}
-				String responseBody = EntityUtils.toString(entity);
-				JSONArray array = new JSONArray(responseBody);
-
-				return getItemList(array);
-			}
-		};
-
-		try {
-			return httpclient.execute(new HttpGet(url), responseHandler);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return new ArrayList<>();
-	}
-
+	/*
+	 * Helper method to convert JSONArray to a list of Items
+	 */
 	private List<Item> getItemList(JSONArray array) {
 		List<Item> itemList = new ArrayList<>();
 
@@ -143,6 +84,7 @@ public class RecipeAPIClient {
 			List<Double> amountsList = new ArrayList<>();
 			List<String> unitsList = new ArrayList<>();
 			List<String> ingredientsList = new ArrayList<>();
+
 			for (int j = 0; j < ingredientsArray.length(); j++) {
 				JSONObject ingredientObject = ingredientsArray.getJSONObject(j);
 				JSONObject measureObject = ingredientObject.getJSONObject("measures").getJSONObject("us");
@@ -162,19 +104,23 @@ public class RecipeAPIClient {
 				}
 			}
 
+			// create the item
 			Item item = Item.builder().itemId(getIntFieldOrEmpty(recipeObject, "id"))
 					.imageUrl(getStringFieldOrEmpty(recipeObject, "image"))
 					.title(getStringFieldOrEmpty(recipeObject, "title")).amounts(amountsList).units(unitsList)
 					.ingredients(ingredientsList).instructions(instrcutionsList)
-					.sourceUrl(getStringFieldOrEmpty(recipeObject,"sourceUrl"))
-					.build();
+					.sourceUrl(getStringFieldOrEmpty(recipeObject, "sourceUrl")).build();
 
-			// item -> itemList
+			// add the item to the itemList
 			itemList.add(item);
 		}
 		return itemList;
 	}
 
+	/*
+	 * Helper methods to check null value in a JSONObject and swap with replacement
+	 * value
+	 */
 	private String getStringFieldOrEmpty(JSONObject obj, String field) {
 		return obj.isNull(field) ? "" : obj.getString(field);
 	}
@@ -186,5 +132,4 @@ public class RecipeAPIClient {
 	private double getDoubleFieldOrEmpty(JSONObject obj, String field) {
 		return obj.isNull(field) ? 0 : obj.getDouble(field);
 	}
-
 }

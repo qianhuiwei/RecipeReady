@@ -9,7 +9,6 @@ body {
 	color: #FFFFFF;
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 300;
-/* 	font-size: 0.9em; */
 }
 
 button:hover {
@@ -25,23 +24,20 @@ ul {
  */
 .top-header {
 	align-items: center;
-/* 	background: #DF574B; */
 	background: #8d6e63;
 	box-shadow: 0px 2px 10px #333333;
-	display: flex; 
+	display: flex;
 	height: 60px;
 	position: fixed; /*fixed on the top of the page*/
 	top: 0;
 	width: 100%;
 	z-index: 1;
-	
 }
 
 .header-mark {
 	font-family: Apple Chancery;
-	 font-size: 25px;
+	font-size: 25px;
 }
-
 
 .avatar {
 	background: #FFFFFF;
@@ -49,7 +45,7 @@ ul {
 	color: #333C4D;
 	height: 40px;
 	margin-right: 20px;
-    margin-left: 10px;
+	margin-left: 10px;
 	padding-left: 9px;
 	padding-top: 5px;
 	width: 40px;
@@ -63,8 +59,7 @@ ul {
 /**
  * top navigation
  */
- 
-#recipe-btn:hover, #fridge-btn:hover{
+#recipe-btn:hover, #fridge-btn:hover {
 	text-decoration: underline;
 }
 
@@ -96,38 +91,34 @@ ul {
 /**
  * main header
  */
-
 .container>header {
 	height: 250px;
 	align-items: center;
 	display: flex;
 	background-size: 100%;
-	
-	background-position: top;	
+	background-position: top;
 	background-repeat: no-repeat;
 	animation: slide;
-	animation-duration:30s;
-	animation-direction:reverse; 
-	animation-iteration-count:infinite;
-	animation-timing-function:ease-in-out;
+	animation-duration: 30s;
+	animation-direction: reverse;
+	animation-iteration-count: infinite;
+	animation-timing-function: ease-in-out;
 }
 
-@keyframes slide{
+@keyframes slide { 
 	0% {
-		background-image:url('food_1.jpg');
-	} 20% {
-		background-image:url('food_6.jpg');
-	} 40% {
-		background-image:url('food_5.jpg');
-	} 60% {
-		background-image:url('food_3.jpg');
-	} 80% {
-	    background-image:url('food_2.jpg');
-	} 100% {
-	    background-image:url('food_1.jpg'); 
-	} 
+		background-image: url('food_1.jpg');} 
+	20% {
+		background-image:url('food_6.jpg');} 
+	40% {
+		background-image:url('food_5.jpg');} 
+	60% {
+		background-image:url('food_3.jpg');}
+	80% {
+		background-image:url('food_2.jpg');}
+	100% {
+		background-image:url('food_1.jpg');}
 }
-
 
 .container>header p {
 	border-left: 1px solid #FFFFFF;
@@ -135,7 +126,7 @@ ul {
 	font-size: 2em;
 	line-height: 1em;
 	margin-left: 300px;
-	margin-bottom : 100px;
+	margin-bottom: 100px;
 	padding-left: 5px;
 }
 
@@ -162,10 +153,10 @@ ul {
 	color: #624630;
 	margin: 0px auto;
 	overflow: auto;
-	padding-top:90px;
-	padding-bottom:90px;
-	padding-left:40px;
-	padding-right:40px;
+	padding-top: 90px;
+	padding-bottom: 90px;
+	padding-left: 40px;
+	padding-right: 40px;
 	width: 350px;
 }
 
@@ -185,8 +176,7 @@ ul {
 }
 
 #login-form #login-btn {
-/* 	background-color: #DF574B; */
-    background-color: white;
+	background-color: white;
 	border: none;
 	color: #624630;
 	border-radius: 4px;
@@ -199,7 +189,6 @@ ul {
 }
 
 #login-form #register-form-btn {
-/* 	background-color: #DF574B; */
 	background-color: white;
 	border: none;
 	color: #624630;
@@ -246,11 +235,10 @@ ul {
 }
 
 #register-form #login-form-btn {
-/* 	background-color: #DF574B; */
 	background-color: white;
 	border: none;
 	color: #624630;
-    border-radius: 4px;
+	border-radius: 4px;
 	cursor: pointer;
 	float: left;
 	padding: 8px 10px;
@@ -260,7 +248,6 @@ ul {
 }
 
 #register-form #register-btn {
-	/* background-color: #DF574B; */
 	background-color: white;
 	border: none;
 	color: #624630;
@@ -283,11 +270,7 @@ ul {
  * main section
  */
 .main-section {
-/* 	background: #F3BB43; */
-/* 	background: #ff9999; */
 	background: #ff8a65;
-/* 	background: #ffab91; */
-/*    background: #e57373; */
 }
 
 /**
@@ -309,7 +292,6 @@ ul {
  */
 .main-nav-btn {
 	background: none;
-/* 	border-top: 1px solid #FFFFFF; */
 	border-bottom: 1px solid #FFFFFF;
 	color: #FFFFFF;
 	display: block;
@@ -319,10 +301,10 @@ ul {
 }
 
 .main-nav-btn:hover {
-    background: rgba(255, 255, 255, 0.8);
-    background: #d7ccc8;
+	background: rgba(255, 255, 255, 0.8);
+	background: #d7ccc8;
 	background: #fbe9e7;
-    background: #ffebee;
+	background: #ffebee;
 	color: #624630;
 }
 
@@ -354,9 +336,8 @@ ul {
 	text-align: center;
 }
 
-
 /**
- * item
+ * recipe item
  */
 .item {
 	align-items: center;
@@ -377,7 +358,6 @@ ul {
 }
 
 .item img {
-	/* border: 1px solid #FFFFFF; */
 	height: 120px;
 	width: 160px;
 }
@@ -422,10 +402,10 @@ ul {
 }
 
 #add-option-1 {
-	margin-top:15px;
-	margin-left:20px;
-	margin-bottom:20px;
-} 
+	margin-top: 15px;
+	margin-left: 20px;
+	margin-bottom: 20px;
+}
 
 #add-option-1>label {
 	font-weight: 400;
@@ -436,23 +416,23 @@ ul {
 }
 
 #add-option-2 {
-	margin-top:20px;
-	margin-right:20px;
-	margin-bottom:20px;
-} 
+	margin-top: 20px;
+	margin-right: 20px;
+	margin-bottom: 20px;
+}
 
-#fridge-item-container{
+#fridge-item-container {
 	background: #fbe9e7;
 	min-height: 600px;
-	color:#4e342e;
-	margin-top:15px;
-	margin-bottom:10px;
-	padding-top:10px;
-	padding-left:10px;
+	color: #4e342e;
+	margin-top: 15px;
+	margin-bottom: 10px;
+	padding-top: 10px;
+	padding-left: 10px;
 	border-right: 1px solid #FFFFFF;
 }
 
-#storage-label{
+#storage-label {
 	font-weight: 400;
 }
 
@@ -460,7 +440,7 @@ ul {
 	margin-top: 10px;
 }
 
-.fridge-item-list{
+.fridge-item-list {
 	margin-top: 10px;
 	display: flex;
 }
@@ -478,19 +458,19 @@ ul {
 }
 
 #input-file {
-    display: none;
-} 
+	display: none;
+}
 
 .custom-file-upload {
-  	background-color: white;
+	background-color: white;
 	border: none;
 	color: #4e342e;
 	border-radius: 4px;
 	cursor: pointer;
 	text-align: left;
-	margin-left:5px;
+	margin-left: 5px;
 	padding: 7px 9px;
-	font-size:0.9em;
+	font-size: 0.9em;
 }
 
 #add-fridge-btn {
@@ -501,13 +481,13 @@ ul {
 	cursor: pointer;
 	text-align: left;
 	padding: 8px 10px;
-	margin-left:5px;
+	margin-left: 5px;
 	font-weight: 400;
 	font-family: 'Open Sans', sans-serif;
-	font-size:0.9em;
+	font-size: 0.9em;
 }
 
-#see-recommend-btn{
+#see-recommend-btn {
 	background-color: white;
 	border: solid 1px #8d6e63;
 	color: #4e342e;
@@ -515,13 +495,13 @@ ul {
 	cursor: pointer;
 	text-align: left;
 	padding: 8px 10px;
-	margin-left:5px;
+	margin-left: 5px;
 	font-weight: 400;
 	font-family: 'Open Sans', sans-serif;
-	font-size:0.9em;
+	font-size: 0.9em;
 }
 
-#clear-fridge-btn{
+#clear-fridge-btn {
 	background-color: white;
 	border: solid 1px #8d6e63;
 	color: #4e342e;
@@ -529,10 +509,10 @@ ul {
 	cursor: pointer;
 	text-align: left;
 	padding: 8px 10px;
-	margin-left:5px;
+	margin-left: 5px;
 	font-weight: 400;
 	font-family: 'Open Sans', sans-serif;
-	font-size:0.9em;
+	font-size: 0.9em;
 }
 
 .item:hover {
@@ -540,32 +520,31 @@ ul {
 	transition: background-color 100ms linear;
 }
 
-
 /**
  * labels
  */
-#result-container{
+#result-container {
 	background: #fbe9e7;
 	min-height: 600px;
-	color:#4e342e;
-	margin-top:23px;
-	margin-bottom:10px;
-	padding-top:10px;
+	color: #4e342e;
+	margin-top: 23px;
+	margin-bottom: 10px;
+	padding-top: 10px;
 }
 
-.loading-section{
+.loading-section {
 	display: flex;
 }
 
-.loading-section > div{
+.loading-section>div {
 	flex: 1;
 }
 
 #img-container {
 	border: solid 1px #4e342e;
-	height:300px;
-	width:300px;
-	margin-left:10px;
+	height: 300px;
+	width: 300px;
+	margin-left: 10px;
 }
 
 #load-img-msg {
@@ -576,16 +555,16 @@ ul {
 
 #label-label {
 	font-weight: 400;
-	margin-top:10px;
-	padding-left:10px;
+	margin-top: 10px;
+	padding-left: 10px;
 }
 
-.label-item-list{
+.label-item-list {
 	display: flex;
-	margin-top:10px;
-	margin-left:10px;
-	margin-right:10px;
-	padding-bottom:10px;
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+	padding-bottom: 10px;
 }
 
 .label-item-list>div {

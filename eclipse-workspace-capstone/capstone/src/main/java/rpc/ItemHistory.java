@@ -1,6 +1,7 @@
 package rpc;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -48,7 +49,7 @@ public class ItemHistory extends HttpServlet {
 		String userId = request.getParameter("user_id");
 
 		MySQLConnection connection = new MySQLConnection();
-		Set<Item> items = connection.getFavoriteItems(userId);
+		List<Item> items = connection.getFavoriteItems(userId);
 		connection.close();
 
 		JSONArray array = new JSONArray();

@@ -112,7 +112,6 @@ public class Fridge extends HttpServlet {
 			} else {
 				connection.clearFridge(userId);
 			}
-					
 
 			RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS")); // FOR TESTING
 		} catch (JSONException e) {

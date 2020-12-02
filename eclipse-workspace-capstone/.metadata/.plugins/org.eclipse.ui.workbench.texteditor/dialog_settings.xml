@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="recipe"/>
+		<item key="selection" value="getIt"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="package external;"/>
+			<item value="getIt"/>
+			<item value="getF"/>
 			<item value="recipe"/>
 			<item value="input"/>
 			<item value="upload"/>
@@ -20,9 +23,6 @@
 			<item value="loadF"/>
 			<item value="delete"/>
 			<item value="item-name"/>
-			<item value="fridge"/>
-			<item value="ran"/>
-			<item value="fridgeItemList"/>
 		</list>
 		<list key="replacehistory">
 		</list>

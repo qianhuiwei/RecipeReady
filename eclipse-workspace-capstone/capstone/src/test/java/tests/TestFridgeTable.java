@@ -1,0 +1,64 @@
+package tests;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
+import org.junit.Test;
+
+import db.MySQLConnection;
+
+public class TestFridgeTable {
+
+	@Test
+	public void test() {
+
+		MySQLConnection connection = new MySQLConnection();
+		connection.testMySQLConnection();
+
+		String userId = "user1";
+
+		connection.clearFridge(userId); // first clear the fridge
+		List<String> fridge = connection.getFridge(userId);
+		assertEquals(0, fridge.size());
+
+		// test setFridge and getFridge method
+		connection.setFridge(userId, "apple"); // add 1 ingredient
+		fridge = connection.getFridge(userId);
+		assertEquals(1, fridge.size());
+		assertEquals("apple", fridge.get(0));
+
+		System.out.println("setFridge() db operation checked");
+		System.out.println("getFridge() db operation checked");
+
+		connection.setFridge(userId, "banana");
+		fridge = connection.getFridge(userId);
+		assertEquals(2, fridge.size());
+		assertEquals("apple", fridge.get(0));
+		assertEquals("banana", fridge.get(1));
+
+		connection.setFridge(userId, "cherry");
+		fridge = connection.getFridge(userId);
+		assertEquals(3, fridge.size());
+		assertEquals("apple", fridge.get(0));
+		assertEquals("banana", fridge.get(1));
+		assertEquals("cherry", fridge.get(2));
+
+		// test unsetFridge method
+		connection.unsetFridge(userId, "banana");
+		fridge = connection.getFridge(userId);
+		assertEquals(2, fridge.size());
+		assertEquals("apple", fridge.get(0));
+		assertEquals("cherry", fridge.get(1));
+
+		System.out.println("unsetFridge() db operation checked");
+
+		// test clearFridge method
+		connection.clearFridge(userId);
+		fridge = connection.getFridge(userId);
+		assertEquals(0, fridge.size());
+		System.out.println("clearFridge() db operation checked");
+
+		connection.close();
+	}
+}
