@@ -1,3 +1,4 @@
+
 (function() {
 
 	/**
@@ -6,7 +7,6 @@
 	AWS.config.region = 'us-west-2';
 	AWS.config.credentials = new AWS.Credentials('AKIAVYQKYPU6HMH5FOEC', 'GGSIPfRIUAEM3fFQS+43B6K0PVPqN1e8Vn2cqv14');
 	const rekognition = new AWS.Rekognition();
-	var fridgeItemList;
 
 	/**
 	 * Initialize major event handlers
@@ -470,7 +470,7 @@
 			showErrorMessage('Cannot load recommeded items.');
 		});
 	}
-	
+
 	/**
 	 * API #3 Load favorite items API end point: [GET]
 	 * /history?user_id=1111
@@ -498,7 +498,7 @@
 			showErrorMessage('Cannot load favorite items.');
 		});
 	}
-	
+
 	/**
 	 * API #4 Load fridge items API end point: [GET]
 	 * /history?user_id=1111
@@ -513,10 +513,9 @@
 		// display loading message
 		showLoadingFridgeMessage("Loading fridge ingredients...");
 
-
 		// make AJAX call
 		ajax('GET', url + '?' + params, req, function(res) {
-			fridgeItemList = JSON.parse(res);
+			var fridgeItemList = JSON.parse(res);
 			if (!fridgeItemList || fridgeItemList.length === 0) {
 				showWarningFridgeMessage('No ingredients in fridge.');
 			} else {
@@ -526,6 +525,7 @@
 			showErrorMessage('Cannot load fridge ingredients.');
 		});
 	}
+
 
 	/**
 	 * API #4 Toggle favorite items
@@ -574,9 +574,19 @@
 		var itemList = document.querySelector('#item-list');
 		itemList.innerHTML = ''; // clear current results
 
-		for (var i = 0; i < items.length; i++) {
-			addItem(itemList, items[i], fridgeItemList);
-		}
+		// request parameters
+		var url = './fridge';
+		var params = 'user_id=' + user_id;
+		var req = JSON.stringify({});
+
+		// get fridge item list
+		ajax('GET', url + '?' + params, req, function(res) {
+			var fridgeItemList = JSON.parse(res);
+			// for each recipe item and mark missing ingredients based on the fridge item list
+			for (var i = 0; i < items.length; i++) {
+				addItem(itemList, items[i], fridgeItemList);
+			}
+		});
 	}
 
 	/**
@@ -606,7 +616,7 @@
 				src: 'https://via.placeholder.com/100'
 			}));
 		}
-		
+
 		// section
 		var section = $create('div');
 
@@ -679,12 +689,23 @@
 	function listFridge(fridge) {
 		var loadingMsg = document.querySelector('#load-fridge-msg');
 		loadingMsg.innerHTML = "";
-		var itemList1 = document.querySelector('#fridge-item-list-1');
-		var itemList2 = document.querySelector('#fridge-item-list-2');
-		var itemList3 = document.querySelector('#fridge-item-list-3');
-		itemList1.innerHTML = ''; // clear current results
-		itemList2.innerHTML = '';
-		itemList3.innerHTML = '';
+		var itemList = document.querySelector('#fridge-item-list');
+		itemList.innerHTML = ''; // clear current results
+		
+		var li = $create('li');
+		li.style.display = 'flex';
+		
+		var itemList1 = $create('div');
+		itemList1.style.flex = "1";
+		var itemList2 = $create('div');
+		itemList2.style.flex = "1";
+		var itemList3 = $create('div');
+		itemList3.style.flex = "1";
+		
+		li.appendChild(itemList1);
+		li.appendChild(itemList2);
+		li.appendChild(itemList3);
+		itemList.appendChild(li);
 
 		var itemList = [itemList1, itemList2, itemList3];
 
@@ -700,7 +721,7 @@
 			}
 		}
 	}
-	
+
 	/**
 	 * Helper method to create layout element for each fridge item
 	 */
@@ -756,10 +777,11 @@
 			return
 		}
 
-		/* if (fridgeItem.match(/^[a-z0-9_]+$/) === null) {
-			 alert('Invalid ingredient input');
-			 return
-		 }*/
+		// check user input but allow space
+		if (fridgeItem.match(/^[a-zA-z0-9\ ]*$/) === null) {
+			alert('Invalid ingredient input');
+			return
+		}
 
 		// The request parameters
 		var url = './fridge';
@@ -774,9 +796,7 @@
 				var result = JSON.parse(res);
 				// successfully add ingredient
 				if (result.result === 'SUCCESS') {
-
 					loadFridge();
-					/*			loadFridgeItem(itemList, fridgeItem);*/
 				}
 			},
 
@@ -824,7 +844,7 @@
 				var result = JSON.parse(res);
 				if (result.result === 'SUCCESS') {
 					// clear the fridge section
-					var element = document.querySelector('.fridge-item-list');
+					var element = document.querySelector('#fridge-item-list');
 					element.innerHTML = "";
 					loadFridge();
 				}
@@ -838,7 +858,7 @@
 	// -------------------------------------
 	// Get fridge item labels from uploaded photo (by calling AWS Rekognition API)
 	// -------------------------------------
-	
+
 	/**
 	 * Process the image once it''s uploaded
 	 * Use the image to call Rekognition API, get object labels from the image, and draw the image
@@ -983,7 +1003,6 @@
 				// successfully add ingredient
 				if (result.result === 'SUCCESS') {
 					loadFridge();
-					/*			loadFridgeItem(itemList, fridgeItem);*/
 				}
 			},
 
@@ -992,7 +1011,7 @@
 				alert('Failed to add ingredient');
 			});
 	}
-	
+
 	/**
 	 * Navigate to the recommended recipes section from the fridge section
 	 */

@@ -440,13 +440,8 @@ ul {
 	margin-top: 10px;
 }
 
-.fridge-item-list {
+#fridge-item-list {
 	margin-top: 10px;
-	display: flex;
-}
-
-.fridge-item-list>div {
-	flex: 1;
 }
 
 #add-option-1 input {

@@ -1,6 +1,7 @@
 package rpc;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -41,14 +42,18 @@ public class InspireItem extends HttpServlet {
 			response.setStatus(403);
 			return;
 		}
+		
+		String userId = request.getParameter("user_id");
 
 		MySQLConnection connection = new MySQLConnection();
+		List<Integer> favoriteItemIds = connection.getFavoriteItemIds(userId);
 		Set<Item> itemList = connection.getRandomItems();
 		connection.close();
 
 		JSONArray array = new JSONArray();
 		for (Item item : itemList) {
 			JSONObject obj = item.toJSONObject();
+			obj.put("favorite", favoriteItemIds.contains(item.getItemId()));
 			array.put(obj);
 		}
 

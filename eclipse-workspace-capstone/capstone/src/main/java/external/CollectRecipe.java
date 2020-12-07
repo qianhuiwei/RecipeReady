@@ -11,7 +11,7 @@ import entity.Item;
 // --------------------------------------------------------------------------------
 public class CollectRecipe {
 	
-	static int id1 = 135000;
+	static int id1 = 140000;
 
 	public static void main(String[] args) {
 		

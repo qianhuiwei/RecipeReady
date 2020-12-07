@@ -50,6 +50,7 @@ public class RecommendItem extends HttpServlet {
 		// get userFride
 		MySQLConnection connection = new MySQLConnection();
 		List<String> userFridge = connection.getFridge(userId);
+		List<Integer> favoriteItemIds = connection.getFavoriteItemIds(userId);
 		System.out.println("userfridge" + userFridge);
 
 		if (!userFridge.equals(userFridgeCache)) {
@@ -63,6 +64,7 @@ public class RecommendItem extends HttpServlet {
 			JSONArray array = new JSONArray();
 			for (Item item : itemList) {
 				JSONObject obj = item.toJSONObject();
+				obj.put("favorite", favoriteItemIds.contains(item.getItemId()));
 				array.put(obj);
 			}
 
