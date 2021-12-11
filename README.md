@@ -24,4 +24,3 @@ This app is designed to:
 
 ## Check out the page
 Note: the website is currently not avalible due to the termination of AWS database. Please checkout the code for now. <br />
-This is the previous [link](http://ec2-18-219-122-59.us-east-2.compute.amazonaws.com/capstone/index.html). 
