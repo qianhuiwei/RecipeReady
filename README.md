@@ -1,6 +1,6 @@
 # RecipeReady
 
-RecipeReady is a web app that helps you with both storage management and recipe recommendation.<br />
+RecipeReady is a web app that helps you with both storage management and recipe recommendation. <br />
 It tracks your ingredients in the fridge and recommends recipes based on ingredients you already have.
 <img src="https://github.com/qianhuiwei/RecipeReady/blob/master/pageDemo.png" width="900"/>
 
@@ -21,3 +21,7 @@ This app is designed to:
 * Implemented an Apache Tomcat server to handle tasks (including user registration/ login, database communication, recipe collection from external APIs, and recipe recommendation algorithms).
 * Implemented a cloud database by using AWS MySQL to store data (inclusing user profile, all recipes, ingredients in user's fridge, and user's favorite recipes).
 * Deployed the server to AWS EC2 using Docker.
+
+## Check out the page
+Note: the website is currently not avalible due to the termination of AWS database. Please checkout the code for now. <br />
+This is the previous [link](http://ec2-18-219-122-59.us-east-2.compute.amazonaws.com/capstone/index.html). 
