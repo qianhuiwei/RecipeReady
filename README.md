@@ -1,9 +1,9 @@
 # RecipeReady
 
-RecipeReady is a web app that helps you with both storage management and recipe recommendation. 
+RecipeReady is a web app that helps you with both storage management and recipe recommendation.<br />
 It tracks your ingredients in the fridge and recommends recipes based on ingredients you already have.
- 
-<img src="https://github.com/qianhuiwei/RecipeReady/blob/master/pageDemo.png width="500"/>
+<img src="https://github.com/qianhuiwei/RecipeReady/blob/master/pageDemo.png" width="500"/>
+
 
 ## Motivation
 This app is designed to: 
@@ -11,6 +11,7 @@ This app is designed to:
 * Relieve people from searching recipes by ingredients manually.
 * Save time for shopping missing ingredients.
                                                                                                                                                                             
+
 ## Features
 ### Frontend
 * Used HTML, CSS, Javascript, AJAX to set up a responsive and interactive SPA.
