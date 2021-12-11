@@ -18,6 +18,6 @@ This app is designed to:
 * Imported icons from [Google Icon Font Awesome](https://fontawesome.com/v5.15/icons/google).
 
 #### Backend
-* Implemented an Apache Tomcat server to handle tasks (including user registration/ login, database communication, recipe collection from external APIs, and recipe recommendation algorithm).
-* Implemented a cloud database by using AWS MySQL to store data (inclusing user profile, all recipes, ingredient in user's fridge, and user's favorite recipes).
+* Implemented an Apache Tomcat server to handle tasks (including user registration/ login, database communication, recipe collection from external APIs, and recipe recommendation algorithms).
+* Implemented a cloud database by using AWS MySQL to store data (inclusing user profile, all recipes, ingredients in user's fridge, and user's favorite recipes).
 * Deployed the server to AWS EC2 using Docker.
