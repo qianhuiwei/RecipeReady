@@ -13,7 +13,7 @@ This app is designed to:
 ## Features
 #### Frontend
 * Used HTML, CSS, Javascript, AJAX to set up a responsive and interactive SPA.
-* Applied AWS Rekognition to allow people add ingredients from uploaded photos.
+* Applied [AWS Rekognition](https://aws.amazon.com/rekognition/?nc1=h_ls) to allow people add ingredients from uploaded photos.
 * Improved UX by marking missing ingredients in recipes.
 * Imported icons from [Google Icon Font Awesome](https://fontawesome.com/v5.15/icons/google).
 
